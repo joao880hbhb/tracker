@@ -112,7 +112,8 @@ p {
   border-radius: 2px;
 }
 
-.container {
+/* Sengaja bukan ".container" agar tidak bertabrakan dengan utilitas bawaan Tailwind CDN. */
+.page-width {
   width: min(calc(100% - 48px), var(--container));
   margin-inline: auto;
 }
@@ -3183,7 +3184,7 @@ p {
 }
 
 @media (max-width: 760px) {
-  .container {
+  .page-width {
     width: min(calc(100% - 32px), var(--container));
   }
 
