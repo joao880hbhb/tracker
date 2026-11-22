@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#271F4A">
+  <meta name="description" content="KAIH 30 Hari — program pembiasaan karakter untuk membantu siswa Indonesia membangun tujuh kebiasaan positif setiap hari.">
+  <title>KAIH 30 Hari — Kebiasaan Anak Indonesia Hebat</title>
+
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#271F4A',
+            sky: '#8056E8',
+            hero: '#FFF7C8',
+            sun: '#FFD84D',
+            mist: '#FBF9FF'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Lewati ke konten utama</a>
+
+  <div class="site-shell">
+    <header class="site-nav" id="siteNav">
+      <div class="container">
+        <nav class="nav-inner" aria-label="Navigasi utama">
+          <a class="brand" href="#home" aria-label="KAIH 30 Hari — kembali ke beranda">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 42 42" fill="none">
+                <rect width="42" height="42" rx="11" fill="#6F4DD8"/>
+                <path d="M12.5 29V13M12.5 21.5L24 13M12.5 21.5L24.5 29" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="30" cy="12" r="4.2" fill="#FFD43B"/>
+              </svg>
+            </span>
+            <span class="brand-copy">
+              <strong>KAIH 30 HARI</strong>
+              <small>Kebiasaan Anak Indonesia Hebat</small>
+            </span>
+          </a>
+
+          <div class="nav-desktop">
+            <div class="nav-links">
+              <a href="#home" class="nav-link is-active" data-nav-link="home" aria-current="page">Beranda</a>
+              <a href="#habits" class="nav-link" data-nav-link="habits">7 Kebiasaan</a>
+              <a href="#media" class="nav-link" data-nav-link="media">Media Edukasi</a>
+              <a href="#tracker" class="nav-link" data-nav-link="tracker">Habit Tracker</a>
+              <a href="#recap" class="nav-link" data-nav-link="recap">Rekap Progres</a>
+            </div>
+            <a href="#tracker" class="nav-cta" data-start-tracking>
+              Mulai Mengisi
+              <span class="icon" data-icon="arrow-up-right"></span>
+            </a>
+          </div>
+
+          <button class="nav-mobile-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Buka menu navigasi">
+            <span class="icon" data-icon="menu"></span>
+          </button>
+        </nav>
+
+        <div class="mobile-menu" id="mobileMenu" hidden>
+          <div class="mobile-menu-links">
+            <a href="#home" class="mobile-nav-link is-active" data-nav-link="home">Beranda</a>
+            <a href="#habits" class="mobile-nav-link" data-nav-link="habits">7 Kebiasaan</a>
+            <a href="#media" class="mobile-nav-link" data-nav-link="media">Media Edukasi</a>
+            <a href="#tracker" class="mobile-nav-link" data-nav-link="tracker">Habit Tracker</a>
+            <a href="#recap" class="mobile-nav-link" data-nav-link="recap">Rekap Progres</a>
+          </div>
+          <a href="#tracker" class="btn btn-yellow mobile-menu-cta" data-start-tracking>
+            Mulai Mengisi
+            <span class="icon" data-icon="arrow-right"></span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============ HERO ============ -->
+      <section class="hero" id="home" aria-labelledby="hero-title">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">
+              <span class="eyebrow-line" aria-hidden="true"></span>
+              Program pembiasaan karakter siswa
+            </p>
+
+            <h1 id="hero-title">
+              Mulai dari kebiasaan kecil, tumbuh menjadi
+              <span class="hero-highlight">generasi</span>
+              <span class="hero-highlight">hebat.</span>
+            </h1>
+
+            <p class="hero-description">
+              Program 30 hari untuk membantu siswa membangun tujuh kebiasaan positif melalui aktivitas sederhana yang dilakukan secara konsisten setiap hari.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#tracker" class="btn btn-yellow" data-start-tracking>
+                Mulai Perjalanan
+                <span class="icon" data-icon="arrow-right"></span>
+              </a>
+              <a href="#habits" class="btn btn-outline">
+                Pelajari 7 Kebiasaan
+                <span class="icon" data-icon="book-open"></span>
+              </a>
+            </div>
+
+            <div class="hero-metrics" aria-label="Ringkasan program">
+              <div class="hero-metric">
+                <strong>30</strong>
+                <span>Hari pembiasaan</span>
+              </div>
+              <div class="hero-metric">
+                <strong>7</strong>
+                <span>Kebiasaan positif</span>
+              </div>
+              <div class="hero-metric">
+                <strong>Harian</strong>
+                <span>Catatan perkembangan</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="hero-art-frame">
+              <img class="hero-illustration" src="assets/images/illustrations/habits/hero-kids-placeholder.png" alt="Ilustrasi anak-anak belajar dan tumbuh bersama." fetchpriority="high">
+              <svg class="hero-illustration-original" viewBox="0 0 620 560" role="img" aria-labelledby="heroArtTitle">
+                <title id="heroArtTitle">Dua siswa sekolah Indonesia merawat pohon kebiasaan yang berbuah tujuh hal baik.</title>
+                <defs>
+                  <clipPath id="heroFrameClip">
+                    <rect x="10" y="10" width="600" height="500" rx="20"/>
+                  </clipPath>
+                </defs>
+
+                <rect x="10" y="10" width="600" height="500" rx="20" fill="#FFFDF6"/>
+                <g clip-path="url(#heroFrameClip)">
+                  <g class="scene-sun">
+                    <circle cx="492" cy="124" r="61" fill="#FFD43B"/>
+                    <g stroke="#0F2942" stroke-opacity=".35" stroke-width="2" stroke-linecap="round">
+                      <path d="M492 42v-14M492 220v-14M410 124h-14M588 124h-14"/>
+                      <path d="m434 66-10-10M560 192l-10-10M434 182l-10 10M560 56l-10 10"/>
+                    </g>
+                  </g>
+
+                  <path d="M68 154c8-11 23-12 31-3 8-5 20-2 23 7 10-1 17 6 16 14H60c-2-8 2-15 8-18Z" fill="#FFFFFF" stroke="#0F2942" stroke-opacity=".16" stroke-width="1.5"/>
+                  <path d="M332 82c6-9 18-10 24-2 7-4 16-1 18 6 8-1 13 5 12 11h-60c-1-6 1-11 6-15Z" fill="#FFFFFF" stroke="#0F2942" stroke-opacity=".12" stroke-width="1.5"/>
+
+                  <g class="scene-school">
+                    <rect x="62" y="250" width="158" height="112" rx="3" fill="#F8FAFC" stroke="#0F2942" stroke-opacity=".55" stroke-width="2"/>
+                    <path d="M52 250h178l-10-25H62l-10 25Z" fill="#7CC7EE" stroke="#0F2942" stroke-opacity=".55" stroke-width="2" stroke-linejoin="round"/>
+                    <rect x="78" y="271" width="28" height="27" rx="2" fill="#E0F2FE" stroke="#0F2942" stroke-opacity=".35" stroke-width="1.5"/>
+                    <rect x="116" y="271" width="28" height="27" rx="2" fill="#E0F2FE" stroke="#0F2942" stroke-opacity=".35" stroke-width="1.5"/>
+                    <rect x="154" y="271" width="28" height="27" rx="2" fill="#E0F2FE" stroke="#0F2942" stroke-opacity=".35" stroke-width="1.5"/>
+                    <rect x="128" y="318" width="30" height="44" rx="2" fill="#0F2942"/>
+                    <circle cx="152" cy="340" r="1.6" fill="#FFD43B"/>
+                    <path d="M86 315h30M178 315h22" stroke="#0F2942" stroke-opacity=".3" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M98 238v-40" stroke="#0F2942" stroke-opacity=".7" stroke-width="2"/>
+                    <path d="M98 198c13 0 20 4 29 2v24c-9 2-16-2-29-2v-24Z" fill="#E45B4F"/>
+                    <path d="M98 222h29v12c-9 2-16-2-29-2v-10Z" fill="#FFFFFF"/>
+                  </g>
+
+                  <path d="M10 402c78-26 181-34 300-18 91 12 183 17 300 4v122H10V402Z" fill="#EAF7EE"/>
+                  <path d="M124 500c21-45 40-67 81-81 34-11 63-2 83 31 18 30 38 44 75 50H124Z" fill="#FFF3D4"/>
+                  <path d="M10 402c78-26 181-34 300-18 91 12 183 17 300 4" fill="none" stroke="#0F2942" stroke-opacity=".12" stroke-width="2"/>
+
+                  <g class="scene-tree">
+                    <path d="M430 424c-3-54 2-105-7-151" fill="none" stroke="#9A6A3A" stroke-width="17" stroke-linecap="round"/>
+                    <path d="M424 303c-18-17-31-34-39-58M425 322c20-10 35-25 45-43" fill="none" stroke="#9A6A3A" stroke-width="8" stroke-linecap="round"/>
+                    <path d="M429 365c-7-23-5-43 0-58" fill="none" stroke="#0F2942" stroke-opacity=".12" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="402" cy="227" r="78" fill="#CFEBDD"/>
+                    <circle cx="475" cy="207" r="69" fill="#DDF3E6"/>
+                    <circle cx="503" cy="260" r="57" fill="#C5E7D5"/>
+                    <circle cx="433" cy="274" r="65" fill="#D8F0E1"/>
+                    <path d="M373 212c-9-17-5-35 10-45-1 16 4 30 17 39" fill="#8FCDB0"/>
+                    <path d="M509 192c8-12 21-17 32-12-6 12-17 21-29 23" fill="#8FCDB0"/>
+                    <g font-family="Plus Jakarta Sans, sans-serif" font-size="11.5" font-weight="700" text-anchor="middle" fill="#0F2942">
+                      <g><circle cx="368" cy="238" r="13" fill="#FFD43B"/><text x="368" y="242">1</text></g>
+                      <g><circle cx="410" cy="185" r="13" fill="#FFD43B"/><text x="410" y="189">2</text></g>
+                      <g><circle cx="458" cy="169" r="13" fill="#FFD43B"/><text x="458" y="173">3</text></g>
+                      <g><circle cx="508" cy="207" r="13" fill="#FFD43B"/><text x="508" y="211">4</text></g>
+                      <g><circle cx="393" cy="270" r="13" fill="#FFD43B"/><text x="393" y="274">5</text></g>
+                      <g><circle cx="457" cy="249" r="13" fill="#FFD43B"/><text x="457" y="253">6</text></g>
+                      <g><circle cx="482" cy="293" r="13" fill="#FFD43B"/><text x="482" y="297">7</text></g>
+                    </g>
+                    <path d="M422 401c-14-4-29-1-38 9 10 11 27 13 41 5" fill="#CFEBDD"/>
+                  </g>
+
+                  <g class="scene-girl">
+                    <ellipse cx="200" cy="432" rx="48" ry="7" fill="#0F2942" opacity=".08"/>
+                    <path d="M174 361v47M205 361v47" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round"/>
+                    <path d="M174 379v34M205 379v34" stroke="#0F2942" stroke-width="7" stroke-linecap="round"/>
+                    <path d="M163 414h23v10h-28c-2-5 1-9 5-10ZM197 414h23c4 1 7 5 5 10h-28v-10Z" fill="#0F2942"/>
+                    <path d="M163 321c-7 13-8 27-3 40l39-4c5-14 3-28-5-38-9 2-21 4-31 2Z" fill="#0F2942"/>
+                    <path d="M161 302c8-5 18-7 31-6 11 1 18 4 23 9l-3 28c-17 6-36 6-52 1l1-32Z" fill="#F8FAFC"/>
+                    <path d="M177 298v22M201 298v22" stroke="#0F2942" stroke-opacity=".15" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M190 292c0-7 13-7 13 0v11h-13v-11Z" fill="#C98B64"/>
+                    <path d="M160 264c0-26 14-43 31-43 18 0 31 17 31 43v25c0 8-6 13-13 13h-36c-7 0-13-5-13-13v-25Z" fill="#FFD43B"/>
+                    <path d="M164 267c3-20 12-30 27-30s25 10 27 30c-6 5-12 7-18 4-5 5-14 7-20 2-6 4-11 2-16-6Z" fill="#C98B64"/>
+                    <path d="M164 253c4-19 14-28 28-28 15 0 24 9 27 27-8-9-17-13-28-13-10 0-19 5-27 14Z" fill="#E8B91F"/>
+                    <circle cx="183" cy="265" r="2" fill="#0F2942"/>
+                    <circle cx="207" cy="265" r="2" fill="#0F2942"/>
+                    <path d="M190 277c4 3 8 3 11 0" fill="none" stroke="#0F2942" stroke-width="1.7" stroke-linecap="round"/>
+                    <path d="M181 291c5 3 12 4 19 2" fill="none" stroke="#FFD43B" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M183 312c-12 8-25 16-32 26" fill="none" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round"/>
+                    <path d="M153 339c-5 1-8 5-7 9 1 4 5 5 9 3l15-8-3-9-14 5Z" fill="#C98B64"/>
+                    <path d="M215 314c4 8 2 20-2 29" fill="none" stroke="#F8FAFC" stroke-width="11" stroke-linecap="round"/>
+                    <circle cx="214" cy="348" r="6" fill="#C98B64"/>
+                  </g>
+
+                  <g class="water-can">
+                    <path d="M238 332c-6-1-10 2-10 7v17c0 6 4 10 10 10h22c6 0 10-4 10-10v-17c0-5-4-8-10-7h-22Z" fill="#0284C7"/>
+                    <path d="M225 341h-12c-5 0-8 4-8 8v2c0 4 3 7 7 7h5" fill="none" stroke="#0F2942" stroke-width="3.5" stroke-linecap="round"/>
+                    <path d="M267 349l16 15" stroke="#0284C7" stroke-width="7" stroke-linecap="round"/>
+                    <path d="M282 364l10 10" stroke="#0284C7" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M292 376c2 5 1 10-2 14M298 379c3 5 3 10 0 14M287 381c1 5-1 9-4 12" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+                  </g>
+
+                  <g class="scene-boy">
+                    <ellipse cx="523" cy="433" rx="43" ry="6" fill="#0F2942" opacity=".08"/>
+                    <path d="M491 398c-5 13-1 24 10 31h55c9-9 11-21 5-33" fill="#0F2942"/>
+                    <path d="M505 385c-7 14-3 30 12 35h40c10-9 13-21 7-33-19 3-41 3-59-2Z" fill="#F8FAFC"/>
+                    <path d="M499 405c9 7 22 11 35 11 12 0 22-3 29-9" fill="none" stroke="#0F2942" stroke-opacity=".12" stroke-width="2"/>
+                    <path d="M509 388v-11h43v12" fill="#FFFFFF"/>
+                    <path d="M527 351c0-6 11-6 11 0v9h-11v-9Z" fill="#B9774B"/>
+                    <circle cx="532" cy="335" r="21" fill="#B9774B"/>
+                    <path d="M511 331c0-15 9-24 22-24 13 0 21 9 21 23-7-8-15-11-24-10-7 1-13 4-19 11Z" fill="#0F2942"/>
+                    <circle cx="525" cy="336" r="1.8" fill="#0F2942"/>
+                    <circle cx="540" cy="336" r="1.8" fill="#0F2942"/>
+                    <circle cx="525" cy="336" r="5.5" fill="none" stroke="#0F2942" stroke-width="1.2"/>
+                    <circle cx="540" cy="336" r="5.5" fill="none" stroke="#0F2942" stroke-width="1.2"/>
+                    <path d="M529 344c2 2 5 2 7 0" fill="none" stroke="#0F2942" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M512 370c9-2 30-2 42 1l3 25c-17 4-35 4-50 0l5-26Z" fill="#0284C7"/>
+                    <path d="M512 382c14 3 29 3 45-1" stroke="#E0F2FE" stroke-width="2.5" fill="none"/>
+                    <path d="M516 395l32-18v25l-32-7Z" fill="#F8FAFC" stroke="#0F2942" stroke-opacity=".3" stroke-width="1.5"/>
+                    <path d="M548 377l28 18-32 7 4-25Z" fill="#E0F2FE" stroke="#0F2942" stroke-opacity=".3" stroke-width="1.5"/>
+                    <path d="M512 399c11 7 22 9 33 4" fill="none" stroke="#B9774B" stroke-width="8" stroke-linecap="round"/>
+                  </g>
+
+                  <g class="scene-sign">
+                    <path d="M126 430v39M205 430v39" stroke="#9A6A3A" stroke-width="4" stroke-linecap="round"/>
+                    <rect x="110" y="424" width="112" height="43" rx="6" fill="#FFFFFF" stroke="#0F2942" stroke-opacity=".45" stroke-width="1.5"/>
+                    <rect x="110" y="424" width="112" height="6" rx="3" fill="#FFD43B"/>
+                    <text x="166" y="450" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="14" font-weight="800" letter-spacing="1.4" fill="#0F2942">30 HARI</text>
+                  </g>
+
+                  <g stroke="#0F2942" stroke-opacity=".28" stroke-width="1.5" stroke-linecap="round">
+                    <path d="M65 416v13M58 421c-5-3-6-7-5-11 5 0 8 4 5 11ZM72 424c5-4 6-8 4-12-5 0-7 4-4 12Z"/>
+                    <path d="M585 386v15M578 390c-5-3-6-7-5-11 5 0 8 4 5 11ZM592 393c5-4 6-8 4-12-5 0-7 4-4 12Z"/>
+                    <path d="M329 425v12M322 430c-5-3-6-7-5-11 5 0 8 4 5 11ZM336 433c5-4 6-8 4-12-5 0-7 4-4 12Z"/>
+                  </g>
+                  <g fill="#FFD43B">
+                    <circle cx="86" cy="448" r="4"/>
+                    <circle cx="88" cy="446" r="3.6" fill="#F97316"/>
+                    <circle cx="356" cy="455" r="4" fill="#F97316"/>
+                    <circle cx="358" cy="453" r="3.5" fill="#FFD43B"/>
+                  </g>
+                  <g fill="none" stroke="#0F2942" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round">
+                    <path d="M562 88c5-6 13-7 19-2M574 79c4-4 10-4 14 0"/>
+                    <path d="M282 140c4-5 11-6 16-2M292 132c3-3 8-3 11 0"/>
+                  </g>
+                  <g fill="#FFFDF6" stroke="#0F2942" stroke-opacity=".12">
+                    <circle cx="52" cy="104" r="2"/>
+                    <circle cx="302" cy="62" r="1.6"/>
+                    <circle cx="579" cy="276" r="2"/>
+                  </g>
+                </g>
+                <rect x="10" y="10" width="600" height="500" rx="20" fill="none" stroke="#0F2942" stroke-opacity=".14" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="hero-art-note">
+              <span class="hero-art-note-icon" aria-hidden="true">
+                <span class="icon" data-icon="sprout"></span>
+              </span>
+              <span>
+                <small>Catatan hari ke-1</small>
+                <strong>Kebiasaan kecil, tumbuh perlahan.</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============ TUJUH KEBIASAAN ============ -->
+      <section class="section habits-section" id="habits" aria-labelledby="habits-title">
+        <div class="container">
+          <div class="section-heading section-heading-single">
+            <div>
+              <p class="eyebrow">
+                <span class="eyebrow-number">01</span>
+                <span class="eyebrow-line" aria-hidden="true"></span>
+                Kenali program
+              </p>
+              <h2 id="habits-title">Tujuh kebiasaan hebat</h2>
+            </div>
+          </div>
+
+          <div class="habits-grid" id="habitsGrid" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- ============ MEDIA EDUKASI ============ -->
+      <section class="section media-section" id="media" aria-labelledby="media-title">
+        <div class="container">
+          <div class="section-heading section-heading-single media-heading">
+            <div>
+              <p class="eyebrow">
+                <span class="eyebrow-number">02</span>
+                <span class="eyebrow-line" aria-hidden="true"></span>
+                Ruang belajar
+              </p>
+              <h2 id="media-title">Media edukasi</h2>
+            </div>
+          </div>
+
+          <div class="video-layout">
+            <article class="video-feature" aria-labelledby="videoTitle">
+              <div class="video-stage" id="videoStage" aria-live="polite"></div>
+              <div class="video-info">
+                <div class="video-copy">
+                  <div class="video-kicker" id="videoKicker">Video pengantar</div>
+                  <h3 id="videoTitle">Mengenal Tujuh Kebiasaan Anak Indonesia Hebat</h3>
+                  <p id="videoDescription">Pahami makna tujuh kebiasaan dan cara memulainya dari rutinitas sehari-hari.</p>
+                  <div class="video-meta" id="videoMeta"></div>
+                </div>
+                <a href="#" class="video-source" id="videoExternal" target="_blank" rel="noopener noreferrer">
+                  Buka sumber
+                  <span class="icon" data-icon="external-link"></span>
+                </a>
+              </div>
+            </article>
+
+          </div>
+
+          <div class="poster-library">
+            <div class="poster-library-head">
+              <div>
+                <span class="panel-kicker">Galeri poster</span>
+                <h3>Poster 7 Kebiasaan Anak Indonesia Hebat</h3>
+              </div>
+              <p>Satu poster lengkap. Klik untuk melihat lebih besar atau mengunduhnya.</p>
+            </div>
+            <div class="poster-grid" id="posterGallery"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ HABIT TRACKER ============ -->
+      <section class="section tracker-section" id="tracker" aria-labelledby="tracker-title">
+        <div class="container">
+          <div class="section-heading section-heading-single tracker-heading">
+            <div>
+              <p class="eyebrow">
+                <span class="eyebrow-number">03</span>
+                <span class="eyebrow-line" aria-hidden="true"></span>
+                Habit tracker
+              </p>
+              <h2 id="tracker-title">Satu hari, satu langkah.</h2>
+            </div>
+          </div>
+
+          <div class="tracker-shell">
+            <div class="tracker-topbar">
+              <div class="active-day-block">
+                <span class="active-day-kicker">Hari yang dipilih</span>
+                <div class="active-day-title">
+                  <span class="active-day-number" id="activeDayNumber">01</span>
+                  <span class="active-day-total">/ 30</span>
+                  <span class="active-day-week" id="activeWeekLabel">Minggu 1</span>
+                </div>
+              </div>
+              <div class="active-day-actions">
+                <div class="active-day-progress">
+                  <span class="active-day-progress-label">Kebiasaan hari ini</span>
+                  <strong><span id="draftHabitCount">0</span><span>/7</span></strong>
+                </div>
+                <div class="day-step-buttons">
+                  <button type="button" class="icon-button" id="prevDayBtn" aria-label="Pilih hari sebelumnya">
+                    <span class="icon" data-icon="chevron-left"></span>
+                  </button>
+                  <button type="button" class="icon-button" id="nextDayBtn" aria-label="Pilih hari berikutnya">
+                    <span class="icon" data-icon="chevron-right"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="day-picker">
+              <div class="day-picker-head">
+                <span>Pilih hari</span>
+                <div class="day-legend" aria-label="Keterangan status hari">
+                  <span><i class="legend-dot is-neutral"></i>Belum diisi</span>
+                  <span><i class="legend-dot is-complete"></i>Sudah diisi</span>
+                  <span><i class="legend-dot is-selected"></i>Dipilih</span>
+                </div>
+              </div>
+              <div class="day-strip-wrap">
+                <button type="button" class="day-scroll-btn" id="dayScrollPrev" aria-label="Geser daftar hari ke kiri">
+                  <span class="icon" data-icon="chevron-left"></span>
+                </button>
+                <div class="day-selector" id="daySelector" role="group" aria-label="Pilih hari pembiasaan, hari 1 sampai 30"></div>
+                <button type="button" class="day-scroll-btn" id="dayScrollNext" aria-label="Geser daftar hari ke kanan">
+                  <span class="icon" data-icon="chevron-right"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="tracker-main">
+              <div class="checklist-panel">
+                <div class="panel-heading">
+                  <div>
+                    <span class="panel-kicker">Checklist kebiasaan</span>
+                    <h3 id="trackerDayHeading">Aktivitas hari ke-1</h3>
+                  </div>
+                  <div class="checklist-meter">
+                    <span id="checklistProgressText">0 dari 7 selesai</span>
+                    <div class="checklist-meter-track" aria-hidden="true">
+                      <span id="checklistProgressBar"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="habit-checklist" id="habitChecklist"></div>
+                <p class="checklist-hint">
+                  <span class="icon" data-icon="info"></span>
+                  Centang kebiasaan yang sudah kamu lakukan. Kamu masih bisa mengubahnya sebelum menyimpan.
+                </p>
+              </div>
+
+              <aside class="daily-note-panel" aria-labelledby="dailyNoteTitle">
+                <div class="panel-heading">
+                  <div>
+                    <span class="panel-kicker">Catatan harian</span>
+                    <h3 id="dailyNoteTitle">Bagaimana harimu?</h3>
+                  </div>
+                  <span class="note-date" id="noteDate">Hari 1</span>
+                </div>
+
+                <label class="field-label" for="dailyNote">Ceritakan kegiatan baikmu hari ini.</label>
+                <div class="textarea-wrap">
+                  <textarea id="dailyNote" maxlength="500" rows="5" placeholder="Contoh: Aku bangun lebih pagi, membantu ibu menyiapkan sarapan, lalu membaca buku sebelum tidur."></textarea>
+                  <span class="char-count"><span id="noteCount">0</span>/500</span>
+                </div>
+
+                <fieldset class="mood-fieldset">
+                  <legend>Bagaimana perasaanmu hari ini?</legend>
+                  <div class="mood-picker" id="moodPicker"></div>
+                </fieldset>
+
+                <div class="save-area">
+                  <button class="save-button" id="saveProgress" type="button" disabled>
+                    <span class="icon" data-icon="save"></span>
+                    <span id="saveButtonLabel">Simpan Progres Hari Ini</span>
+                  </button>
+                  <p class="save-status" id="saveStatus" role="status"></p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ REKAP PROGRES ============ -->
+      <section class="section recap-section" id="recap" aria-labelledby="recap-title">
+        <div class="container">
+          <div class="section-heading section-heading-single recap-heading">
+            <div>
+              <p class="eyebrow">
+                <span class="eyebrow-number">04</span>
+                <span class="eyebrow-line" aria-hidden="true"></span>
+                Rekap progres
+              </p>
+              <h2 id="recap-title">Perjalanan baikmu</h2>
+            </div>
+          </div>
+
+          <div class="report-sheet">
+            <div class="report-head">
+              <div class="report-identity">
+                <span class="report-kicker">Laporan pribadi · KAIH 30 Hari</span>
+                <h3 id="recapStudentName">Siswa KAIH</h3>
+                <p id="recapSchool">Sekolah belum diisi</p>
+              </div>
+              <div class="report-head-actions">
+                <span class="report-date" id="recapDate">21 November 2026</span>
+                <div class="report-actions">
+                  <button type="button" class="btn btn-small btn-outline" id="exportJsonBtn">
+                    <span class="icon" data-icon="download"></span>
+                    Download JSON
+                  </button>
+                  <button type="button" class="btn btn-small btn-navy" id="printReportBtn">
+                    <span class="icon" data-icon="printer"></span>
+                    Cetak Laporan
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-item stat-primary">
+                <span class="stat-label">Hari terisi</span>
+                <div class="stat-value"><span id="statDays">0</span><small>dari 30 hari</small></div>
+                <p class="stat-caption" id="statDaysCaption">Mulai dari hari pertamamu.</p>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Total kebiasaan</span>
+                <div class="stat-value"><span id="statHabits">0</span><small>kebiasaan</small></div>
+                <p class="stat-caption" id="statHabitsCaption">Dari 0 kesempatan harian.</p>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Konsistensi</span>
+                <div class="stat-value"><span id="statConsistency">0%</span></div>
+                <p class="stat-caption" id="statConsistencyCaption">Belum ada hari yang dinilai.</p>
+              </div>
+            </div>
+
+            <section class="daily-chart-block" aria-labelledby="dailyChartTitle">
+              <div class="subsection-head">
+                <div>
+                  <span class="panel-kicker">Grafik harian</span>
+                  <h4 id="dailyChartTitle">Kebiasaan yang dilakukan</h4>
+                </div>
+                <span class="subsection-note">Jumlah kebiasaan dari 0 sampai 7 per hari</span>
+              </div>
+              <div class="daily-chart-wrap">
+                <canvas id="dailyProgressChart" role="img" aria-label="Grafik jumlah kebiasaan yang dilakukan pada setiap hari selama 30 hari"></canvas>
+              </div>
+              <p class="chart-status" id="dailyChartStatus" role="status" hidden>
+                Grafik belum bisa dimuat. Periksa koneksi internet, lalu muat ulang halaman.
+              </p>
+            </section>
+
+            <div class="recap-grid">
+              <div class="habit-progress-block">
+                <div class="subsection-head">
+                  <div>
+                    <span class="panel-kicker">Tujuh kebiasaan</span>
+                    <h4>Progres per kebiasaan</h4>
+                  </div>
+                  <span class="subsection-note">Dihitung dari hari yang sudah diisi</span>
+                </div>
+                <div class="habit-progress" id="habitProgress"></div>
+              </div>
+
+              <aside class="day-map-block">
+                <div class="subsection-head">
+                  <div>
+                    <span class="panel-kicker">Peta 30 hari</span>
+                    <h4>Ritme pembiasaan</h4>
+                  </div>
+                  <span class="map-count" id="dayMapCount">0 / 30</span>
+                </div>
+                <div class="day-map" id="dayMap" role="group" aria-label="Peta 30 hari, pilih hari untuk membuka catatannya"></div>
+                <div class="map-legend">
+                  <span><i class="map-key is-empty"></i>Belum diisi</span>
+                  <span><i class="map-key is-filled"></i>Sudah diisi</span>
+                </div>
+                <p class="map-note" id="recapEmptyNote">Hari yang sudah disimpan akan muncul di sini.</p>
+              </aside>
+            </div>
+
+            <div class="report-foot">
+              <p>
+                <span class="icon" data-icon="lock"></span>
+                Data hanya tersimpan di browser perangkat ini.
+              </p>
+              <button type="button" class="text-danger-button" id="resetDataBtn">
+                <span class="icon" data-icon="trash-2"></span>
+                Hapus semua data
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" aria-labelledby="footer-title">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <a class="brand brand-footer" href="#home" aria-label="KAIH 30 Hari — kembali ke beranda">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 42 42" fill="none">
+                <rect width="42" height="42" rx="11" fill="#FFD43B"/>
+                <path d="M12.5 29V13M12.5 21.5L24 13M12.5 21.5L24.5 29" stroke="#0F2942" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="30" cy="12" r="4.2" fill="#0F2942"/>
+              </svg>
+            </span>
+            <span class="brand-copy">
+              <strong id="footer-title">KAIH 30 HARI</strong>
+              <small>Kebiasaan Anak Indonesia Hebat</small>
+            </span>
+          </a>
+          <p class="footer-description">
+            Ruang belajar dan jurnal pembiasaan untuk membantu anak Indonesia tumbuh sehat, cerdas, dan berkarakter.
+          </p>
+          <p class="footer-school" id="footerSchool">Untuk sekolah dan keluarga Indonesia.</p>
+        </div>
+
+        <div class="footer-links">
+          <span class="footer-heading">Jelajahi</span>
+          <a href="#home">Beranda</a>
+          <a href="#habits">7 Kebiasaan</a>
+          <a href="#media">Media Edukasi</a>
+          <a href="#tracker">Habit Tracker</a>
+          <a href="#recap">Rekap Progres</a>
+        </div>
+
+        <div class="footer-info">
+          <span class="footer-heading">Tentang program</span>
+          <p>Gerakan pembiasaan karakter selama 30 hari dengan tujuh kebiasaan inti: bangun pagi, beribadah, berolahraga, makan sehat, gemar belajar, bermasyarakat, dan tidur cepat.</p>
+          <a href="#tracker" class="footer-cta" data-start-tracking>
+            Mulai mengisi jurnal
+            <span class="icon" data-icon="arrow-up-right"></span>
+          </a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© <span id="footerYear">2026</span> KAIH 30 Hari. Dibuat untuk pembelajaran yang bermakna.</span>
+        <span class="footer-made">Belajar · Bertumbuh · Berbagi</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============ MODALS ============ -->
+  <div class="modal" id="habitModal" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-panel modal-panel-md" role="dialog" aria-modal="true" aria-labelledby="habitModalTitle">
+      <div class="modal-head habit-modal-head">
+        <div class="habit-modal-title-group">
+          <span class="habit-modal-icon" id="habitModalIcon" aria-hidden="true"></span>
+          <div>
+            <span class="modal-kicker" id="habitModalKicker">Kebiasaan 01</span>
+            <h2 id="habitModalTitle">Bangun Pagi</h2>
+          </div>
+        </div>
+        <button class="icon-button modal-close" type="button" data-modal-close aria-label="Tutup penjelasan kebiasaan">
+          <span class="icon" data-icon="x"></span>
+        </button>
+      </div>
+      <div class="modal-body habit-modal-body" id="habitModalBody"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="resetModal" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-panel modal-panel-sm" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+      <div class="modal-head">
+        <div>
+          <span class="modal-kicker modal-kicker-danger">Tindakan permanen</span>
+          <h2 id="resetModalTitle">Hapus semua data?</h2>
+          <p>Identitas peserta, seluruh catatan harian, mood, dan progres kebiasaan akan dihapus dari perangkat ini.</p>
+        </div>
+        <button class="icon-button modal-close" type="button" data-modal-close aria-label="Tutup konfirmasi hapus data">
+          <span class="icon" data-icon="x"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="danger-note">
+          <span class="icon" data-icon="alert-triangle"></span>
+          <p>Tindakan ini tidak bisa dibatalkan. Unduh laporan terlebih dahulu jika kamu masih membutuhkannya.</p>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-modal-close>Batal</button>
+          <button type="button" class="btn btn-danger" id="confirmResetBtn">
+            <span class="icon" data-icon="trash-2"></span>
+            Ya, hapus data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ POSTER LIGHTBOX ============ -->
+  <div class="lightbox" id="posterLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+    <div class="lightbox-top">
+      <div class="lightbox-heading">
+        <div>
+          <h2 id="lightboxTitle">Poster KAIH</h2>
+          <p id="lightboxDesc"></p>
+        </div>
+      </div>
+      <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Tutup galeri poster" data-modal-close>
+        <span class="icon" data-icon="x"></span>
+      </button>
+    </div>
+    <div class="lightbox-stage" id="lightboxStage">
+      <img id="lightboxImage" src="" alt="">
+    </div>
+    <div class="lightbox-bottom">
+      <p>Gulir poster untuk membaca seluruh isinya.</p>
+      <button class="btn btn-yellow btn-small" type="button" id="downloadPosterBtn">
+        <span class="icon" data-icon="download"></span>
+        Download Poster
+      </button>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+
+  <section class="print-report" id="printReport" aria-hidden="true"></section>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/storage.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>

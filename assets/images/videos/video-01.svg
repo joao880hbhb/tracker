@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#271F4A"/>
+  <circle cx="665" cy="90" r="118" fill="#FFD84D" opacity=".96"/>
+  <circle cx="665" cy="90" r="147" fill="none" stroke="#FFD84D" stroke-opacity=".16" stroke-width="2"/>
+  <g stroke="#FFD84D" stroke-width="2" stroke-linecap="round" opacity=".7">
+    <path d="M665-2v-24M665 206v-24M551 90h-24M803 90h-20"/>
+  </g>
+  <g fill="#F3E8FF"><circle cx="84" cy="350" r="5"/><circle cx="744" cy="360" r="3"/><circle cx="565" cy="43" r="3"/></g>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="44" y="52" fill="#FFFDF6" font-size="13" font-weight="700" letter-spacing="3">KAIH 30 HARI</text>
+    <line x1="44" y1="66" x2="756" y2="66" stroke="#FFFFFF" stroke-opacity=".18"/>
+    <text x="44" y="168" fill="#FFFDF6" font-size="68" font-weight="800" letter-spacing="-4">7 KEBIASAAN</text>
+    <text x="44" y="242" fill="#FFD84D" font-size="68" font-weight="800" letter-spacing="-4">UNTUK ANAK</text>
+    <text x="44" y="316" fill="#FFFDF6" font-size="68" font-weight="800" letter-spacing="-4">INDONESIA</text>
+    <text x="44" y="378" fill="#A9C6D9" font-size="13" font-weight="500">Tumbuh sehat, cerdas, dan berkarakter.</text>
+  </g>
+  <g transform="translate(665 325)">
+    <path d="M0 60V-34" stroke="#FFFDF6" stroke-width="5" stroke-linecap="round"/>
+    <path d="M0 60c-30-18-59-20-88-4M0 60c31-16 60-14 89 5" fill="none" stroke="#FFFDF6" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="-55" cy="38" rx="26" ry="13" fill="#DCFCE7" transform="rotate(-22 -55 38)"/>
+    <ellipse cx="53" cy="40" rx="26" ry="13" fill="#FFEDD5" transform="rotate(21 53 40)"/>
+    <ellipse cx="-8" cy="-24" rx="25" ry="13" fill="#F3E8FF" transform="rotate(-8 -8 -24)"/>
+    <text x="-55" y="42" fill="#15803D" font-size="9" font-weight="800" text-anchor="middle">3</text>
+    <text x="53" y="44" fill="#C2410C" font-size="9" font-weight="800" text-anchor="middle">4</text>
+    <text x="-8" y="-20" fill="#7E22CE" font-size="9" font-weight="800" text-anchor="middle">2</text>
+  </g>
+</svg>
