@@ -4,10 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#271F4A">
-  <meta name="description" content="KAIH 30 Hari — program pembiasaan karakter untuk membantu siswa Indonesia membangun tujuh kebiasaan positif setiap hari.">
-  <title>KAIH 30 Hari — Kebiasaan Anak Indonesia Hebat</title>
+  <meta name="description" content="KAIH 30 Hari - program pembiasaan karakter untuk membantu siswa Indonesia membangun tujuh kebiasaan positif setiap hari.">
+  <title>KAIH 30 Hari - Kebiasaan Anak Indonesia Hebat</title>
 
   <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/images/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="KAIH Tracker">
+  <meta name="mobile-web-app-capable" content="yes">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,8 +38,17 @@
     };
   </script>
 
-  <link rel="stylesheet" href="css/style.css?v=20261122-1">
-  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="css/style.css?v=20261126-6">
+  <script>
+    document.documentElement.classList.add('js');
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var isApp = params.get('app') === '1' ||
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+      if (isApp) document.documentElement.classList.add('app-mode');
+    })();
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Lewati ke konten utama</a>
@@ -64,6 +79,10 @@
               <a href="#tracker" class="nav-link" data-nav-link="tracker">Habit Tracker</a>
               <a href="#recap" class="nav-link" data-nav-link="recap">Rekap Progres</a>
             </div>
+            <button type="button" class="nav-install-btn" data-install-app hidden aria-label="Simpan KAIH Tracker di HP">
+              <span class="icon" data-icon="download"></span>
+              <span class="nav-install-label">Simpan di HP</span>
+            </button>
             <a href="#tracker" class="nav-cta" data-start-tracking>
               Mulai Mengisi
               <span class="icon" data-icon="arrow-up-right"></span>
@@ -83,6 +102,10 @@
             <a href="#tracker" class="mobile-nav-link" data-nav-link="tracker">Habit Tracker</a>
             <a href="#recap" class="mobile-nav-link" data-nav-link="recap">Rekap Progres</a>
           </div>
+          <button type="button" class="btn btn-outline mobile-install-btn" data-install-app hidden>
+            <span class="icon" data-icon="download"></span>
+            Simpan di HP
+          </button>
           <a href="#tracker" class="btn btn-yellow mobile-menu-cta" data-start-tracking>
             Mulai Mengisi
             <span class="icon" data-icon="arrow-right"></span>
@@ -95,7 +118,7 @@
       <!-- ============ HERO ============ -->
       <section class="hero" id="home" aria-labelledby="hero-title">
         <div class="page-width hero-grid">
-          <div class="hero-copy">
+          <div class="hero-copy" data-reveal="up">
             <p class="eyebrow">
               <span class="eyebrow-line" aria-hidden="true"></span>
               Program pembiasaan karakter siswa
@@ -138,7 +161,7 @@
             </div>
           </div>
 
-          <div class="hero-visual">
+          <div class="hero-visual" data-reveal="right" style="--reveal-delay: 120ms;">
             <div class="hero-art-frame">
               <img class="hero-illustration" src="assets/images/illustrations/habits/hero-kids-placeholder.png" alt="Ilustrasi anak-anak belajar dan tumbuh bersama." fetchpriority="high">
               <svg class="hero-illustration-original" viewBox="0 0 620 560" role="img" aria-labelledby="heroArtTitle">
@@ -301,7 +324,7 @@
       <!-- ============ TUJUH KEBIASAAN ============ -->
       <section class="section habits-section" id="habits" aria-labelledby="habits-title">
         <div class="page-width">
-          <div class="section-heading section-heading-single">
+          <div class="section-heading section-heading-single" data-reveal="up">
             <div>
               <p class="eyebrow">
                 <span class="eyebrow-number">01</span>
@@ -319,7 +342,7 @@
       <!-- ============ MEDIA EDUKASI ============ -->
       <section class="section media-section" id="media" aria-labelledby="media-title">
         <div class="page-width">
-          <div class="section-heading section-heading-single media-heading">
+          <div class="section-heading section-heading-single media-heading" data-reveal="up">
             <div>
               <p class="eyebrow">
                 <span class="eyebrow-number">02</span>
@@ -331,7 +354,7 @@
           </div>
 
           <div class="video-layout">
-            <article class="video-feature" aria-labelledby="videoTitle">
+            <article class="video-feature" aria-labelledby="videoTitle" data-reveal="up">
               <div class="video-stage" id="videoStage" aria-live="polite"></div>
               <div class="video-info">
                 <div class="video-copy">
@@ -349,7 +372,7 @@
 
           </div>
 
-          <div class="poster-library">
+          <div class="poster-library" data-reveal="up">
             <div class="poster-library-head">
               <div>
                 <span class="panel-kicker">Galeri poster</span>
@@ -365,7 +388,7 @@
       <!-- ============ HABIT TRACKER ============ -->
       <section class="section tracker-section" id="tracker" aria-labelledby="tracker-title">
         <div class="page-width">
-          <div class="section-heading section-heading-single tracker-heading">
+          <div class="section-heading section-heading-single tracker-heading" data-reveal="up">
             <div>
               <p class="eyebrow">
                 <span class="eyebrow-number">03</span>
@@ -376,7 +399,7 @@
             </div>
           </div>
 
-          <div class="tracker-shell">
+          <div class="tracker-shell" data-reveal="up">
             <div class="tracker-topbar">
               <div class="active-day-block">
                 <span class="active-day-kicker">Hari yang dipilih</span>
@@ -480,7 +503,7 @@
       <!-- ============ REKAP PROGRES ============ -->
       <section class="section recap-section" id="recap" aria-labelledby="recap-title">
         <div class="page-width">
-          <div class="section-heading section-heading-single recap-heading">
+          <div class="section-heading section-heading-single recap-heading" data-reveal="up">
             <div>
               <p class="eyebrow">
                 <span class="eyebrow-number">04</span>
@@ -491,7 +514,7 @@
             </div>
           </div>
 
-          <div class="report-sheet">
+          <div class="report-sheet" data-reveal="up">
             <div class="report-head">
               <div class="report-identity">
                 <span class="report-kicker">Laporan pribadi · KAIH 30 Hari</span>
@@ -514,24 +537,24 @@
             </div>
 
             <div class="stats-grid">
-              <div class="stat-item stat-primary">
+              <div class="stat-item stat-primary" data-reveal="up" style="--reveal-delay: 0ms;">
                 <span class="stat-label">Hari terisi</span>
                 <div class="stat-value"><span id="statDays">0</span><small>dari 30 hari</small></div>
                 <p class="stat-caption" id="statDaysCaption">Mulai dari hari pertamamu.</p>
               </div>
-              <div class="stat-item">
+              <div class="stat-item" data-reveal="up" style="--reveal-delay: 80ms;">
                 <span class="stat-label">Total kebiasaan</span>
                 <div class="stat-value"><span id="statHabits">0</span><small>kebiasaan</small></div>
                 <p class="stat-caption" id="statHabitsCaption">Dari 0 kesempatan harian.</p>
               </div>
-              <div class="stat-item">
+              <div class="stat-item" data-reveal="up" style="--reveal-delay: 160ms;">
                 <span class="stat-label">Konsistensi</span>
                 <div class="stat-value"><span id="statConsistency">0%</span></div>
                 <p class="stat-caption" id="statConsistencyCaption">Belum ada hari yang dinilai.</p>
               </div>
             </div>
 
-            <section class="daily-chart-block" aria-labelledby="dailyChartTitle">
+            <section class="daily-chart-block" aria-labelledby="dailyChartTitle" data-reveal="up">
               <div class="subsection-head">
                 <div>
                   <span class="panel-kicker">Grafik harian</span>
@@ -548,7 +571,7 @@
             </section>
 
             <div class="recap-grid">
-              <div class="habit-progress-block">
+              <div class="habit-progress-block" data-reveal="up">
                 <div class="subsection-head">
                   <div>
                     <span class="panel-kicker">Tujuh kebiasaan</span>
@@ -559,7 +582,7 @@
                 <div class="habit-progress" id="habitProgress"></div>
               </div>
 
-              <aside class="day-map-block">
+              <aside class="day-map-block" data-reveal="up" style="--reveal-delay: 80ms;">
                 <div class="subsection-head">
                   <div>
                     <span class="panel-kicker">Peta 30 hari</span>
@@ -687,6 +710,50 @@
     </div>
   </div>
 
+  <div class="modal" id="installModal" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-panel modal-panel-sm" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+      <div class="modal-head">
+        <div>
+          <span class="modal-kicker">Simpan di HP</span>
+          <h2 id="installModalTitle">Pasang KAIH Tracker</h2>
+          <p>Buka tracker dan riwayat progresmu langsung dari layar utama HP.</p>
+        </div>
+        <button class="icon-button modal-close" type="button" data-modal-close aria-label="Tutup panduan simpan di HP">
+          <span class="icon" data-icon="x"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="install-steps" id="installSteps">
+          <div class="install-step">
+            <span class="install-step-num">1</span>
+            <div>
+              <strong>iPhone / iPad (Safari)</strong>
+              <p>Ketuk tombol <b>Share</b>, lalu pilih <b>Add to Home Screen</b>.</p>
+            </div>
+          </div>
+          <div class="install-step">
+            <span class="install-step-num">2</span>
+            <div>
+              <strong>Android (Chrome)</strong>
+              <p>Ketuk menu <b>⋮</b>, lalu pilih <b>Install app</b> atau <b>Tambahkan ke layar utama</b>.</p>
+            </div>
+          </div>
+          <div class="install-step">
+            <span class="install-step-num">3</span>
+            <div>
+              <strong>Buka dari shortcut</strong>
+              <p>Aplikasi akan terbuka langsung ke tampilan Tracker dan Rekap Progres.</p>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-yellow" data-modal-close>Mengerti</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ============ POSTER LIGHTBOX ============ -->
   <div class="lightbox" id="posterLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
     <div class="lightbox-top">
@@ -712,6 +779,193 @@
     </div>
   </div>
 
+  <!-- ============ TEMAN PENGAWAL (HABIT BUDDY) ============ -->
+  <div class="habit-buddy" id="habitBuddy" data-mood="idle">
+    <div class="buddy-bubble" id="buddyBubble" role="status" aria-live="polite" aria-hidden="true">
+      <button class="buddy-bubble-close" id="buddyBubbleClose" type="button" aria-label="Tutup pesan Oren">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <span class="buddy-bubble-kicker">Teman Pengawal</span>
+      <strong id="buddyBubbleTitle">Hai, aku Oren!</strong>
+      <p id="buddyBubbleText">Aku menemani perjalanan 30 harimu.</p>
+      <a class="buddy-bubble-link" id="buddyBubbleLink" href="#tracker" data-start-tracking>
+        <span id="buddyBubbleLinkText">Mulai sekarang</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="buddy-stage">
+      <span class="buddy-streak" id="buddyStreak" hidden>
+        <svg class="buddy-flame" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 22c4.4 0 7.5-3 7.5-7 0-3.1-2-5.6-4-7.7-.6-.6-1.6-.2-1.6.6 0 1.8-1 3.1-2.3 3.3.6-2.4-.3-5.5-2.7-7.7-.6-.6-1.7-.2-1.7.7 0 2.7-1.3 4.1-2.5 5.8C3.8 11 3 12.8 3 15c0 4 3.6 7 9 7Z" fill="#F97316"/>
+          <path d="M12 18.4c1.9 0 3.2-1.4 3.2-3.1 0-1.4-1-2.7-2.1-3.7-.4-.4-1.1-.1-1.1.4 0 .9-.5 1.7-1.2 1.9.2-1.2-.2-2.7-1.3-3.8-.4-.4-1.1-.1-1.1.4 0 1.4-.7 2.1-1.3 3-.4.6-.5 1.4-.5 1.8 0 1.7 1.4 3.1 3.4 3.1Z" fill="#FDE68A"/>
+        </svg>
+        <span id="buddyStreakValue">0</span> hari
+      </span>
+
+      <button class="buddy-figure" id="buddyFigure" type="button" aria-label="Oren, teman pengawalmu. Klik untuk menyapa.">
+        <svg class="buddy-svg" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="buddyFurHead" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FFD25E"/>
+              <stop offset="1" stop-color="#FBA41F"/>
+            </linearGradient>
+            <linearGradient id="buddyFurBody" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FFC94F"/>
+              <stop offset="1" stop-color="#F59A17"/>
+            </linearGradient>
+            <linearGradient id="buddyBelly" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FFF8E4"/>
+              <stop offset="1" stop-color="#FFE7B0"/>
+            </linearGradient>
+            <linearGradient id="buddyScarf" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#8B63F0"/>
+              <stop offset="1" stop-color="#6D45D4"/>
+            </linearGradient>
+          </defs>
+
+          <ellipse class="buddy-shadow" cx="100" cy="189" rx="45" ry="6.5" fill="#271F4A" opacity=".09"/>
+
+          <g class="buddy-character">
+            <!-- kaki -->
+            <ellipse cx="79" cy="181" rx="19" ry="10" fill="#F39A12"/>
+            <ellipse cx="121" cy="181" rx="19" ry="10" fill="#F39A12"/>
+
+            <!-- lengan -->
+            <ellipse cx="55" cy="147" rx="13" ry="21" transform="rotate(18 55 147)" fill="#F6A01B"/>
+            <ellipse cx="145" cy="147" rx="13" ry="21" transform="rotate(-18 145 147)" fill="#F6A01B"/>
+            <circle cx="49" cy="162" r="8" fill="#FFC44D"/>
+            <circle cx="151" cy="162" r="8" fill="#FFC44D"/>
+
+            <!-- badan -->
+            <path d="M100 106c-26 0-44 18-44 42 0 20 18 34 44 34s44-14 44-34c0-24-18-42-44-42Z" fill="url(#buddyFurBody)"/>
+            <ellipse cx="100" cy="148" rx="26" ry="27" fill="url(#buddyBelly)"/>
+
+            <!-- syal -->
+            <path d="M72 120h56l-28 27Z" fill="url(#buddyScarf)"/>
+            <path d="M71 121c9.5 6 19 9 29 9s19.5-3 29-9" fill="none" stroke="#5C37BC" stroke-width="7" stroke-linecap="round"/>
+            <path d="M100 128.5l2.2 5.4 5.9.5-4.5 3.8 1.4 5.7-5-3.1-5 3.1 1.4-5.7-4.5-3.8 5.9-.5Z" fill="#FFD84D"/>
+
+            <!-- telinga -->
+            <circle cx="58" cy="31" r="19" fill="#F9A825"/>
+            <circle cx="142" cy="31" r="19" fill="#F9A825"/>
+            <circle cx="58" cy="31" r="10" fill="#FFD9B0"/>
+            <circle cx="142" cy="31" r="10" fill="#FFD9B0"/>
+
+            <!-- kepala -->
+            <circle cx="100" cy="74" r="49" fill="url(#buddyFurHead)"/>
+
+            <!-- garis loreng -->
+            <g fill="none" stroke="#E07B00" stroke-width="4" stroke-linecap="round">
+              <path d="M93 31c-1.8 3.6-2.7 6.8-2.7 9.8"/>
+              <path d="M100 29v11"/>
+              <path d="M107 31c1.8 3.6 2.7 6.8 2.7 9.8"/>
+              <path d="M53 80h8"/>
+              <path d="M52 87h9"/>
+              <path d="M54 94h7"/>
+              <path d="M147 80h-8"/>
+              <path d="M148 87h-9"/>
+              <path d="M146 94h-7"/>
+            </g>
+
+            <!-- moncong -->
+            <ellipse cx="100" cy="91" rx="26" ry="19" fill="#FFF6DE"/>
+            <ellipse cx="62" cy="93" rx="9" ry="6" fill="#FF9A8B" opacity=".45"/>
+            <ellipse cx="138" cy="93" rx="9" ry="6" fill="#FF9A8B" opacity=".45"/>
+
+            <!-- hidung -->
+            <path d="M94 84c0-2.4 2.7-3.4 6-3.4s6 1 6 3.4c0 3.1-3.4 6.2-6 6.2s-6-3.1-6-6.2Z" fill="#43261A"/>
+
+            <!-- ekspresi: santai -->
+            <g class="buddy-face" data-face="idle">
+              <g class="buddy-eyes-open">
+                <ellipse cx="81" cy="68" rx="10.5" ry="12.5" fill="#2E1B10"/>
+                <ellipse cx="119" cy="68" rx="10.5" ry="12.5" fill="#2E1B10"/>
+                <circle cx="77" cy="63" r="4" fill="#FFFFFF"/>
+                <circle cx="115" cy="63" r="4" fill="#FFFFFF"/>
+                <circle cx="85" cy="73" r="1.8" fill="#FFFFFF" opacity=".9"/>
+                <circle cx="123" cy="73" r="1.8" fill="#FFFFFF" opacity=".9"/>
+              </g>
+              <path d="M92 97c2.5 4 5.3 6 8 6s5.5-2 8-6" fill="none" stroke="#6B3B1E" stroke-width="3.4" stroke-linecap="round"/>
+            </g>
+
+            <!-- ekspresi: senang -->
+            <g class="buddy-face" data-face="happy">
+              <g class="buddy-eyes-open">
+                <ellipse cx="81" cy="68" rx="10.5" ry="12.5" fill="#2E1B10"/>
+                <ellipse cx="119" cy="68" rx="10.5" ry="12.5" fill="#2E1B10"/>
+                <circle cx="77" cy="63" r="4" fill="#FFFFFF"/>
+                <circle cx="115" cy="63" r="4" fill="#FFFFFF"/>
+                <circle cx="85" cy="73" r="1.8" fill="#FFFFFF" opacity=".9"/>
+                <circle cx="123" cy="73" r="1.8" fill="#FFFFFF" opacity=".9"/>
+              </g>
+              <path d="M87 96c3.5 8 8.5 12 13 12s9.5-4 13-12Z" fill="#6B2E1A"/>
+              <ellipse cx="100" cy="105" rx="6.5" ry="3.6" fill="#FF7A7A"/>
+            </g>
+
+            <!-- ekspresi: gembira -->
+            <g class="buddy-face" data-face="cheer">
+              <path d="M70 69q11-13 22 0" fill="none" stroke="#2E1B10" stroke-width="5" stroke-linecap="round"/>
+              <path d="M108 69q11-13 22 0" fill="none" stroke="#2E1B10" stroke-width="5" stroke-linecap="round"/>
+              <path d="M86 96c3.5 9.5 8.5 14.5 14 14.5S110.5 105.5 114 96Z" fill="#6B2E1A"/>
+              <ellipse cx="100" cy="106.5" rx="7.5" ry="4.2" fill="#FF7A7A"/>
+            </g>
+
+            <!-- ekspresi: sedih -->
+            <g class="buddy-face" data-face="sad">
+              <path d="M68 64c6-4 12-5 18-6" fill="none" stroke="#B45309" stroke-width="4" stroke-linecap="round"/>
+              <path d="M132 64c-6-4-12-5-18-6" fill="none" stroke="#B45309" stroke-width="4" stroke-linecap="round"/>
+              <ellipse cx="81" cy="73" rx="9.5" ry="10" fill="#2E1B10"/>
+              <ellipse cx="119" cy="73" rx="9.5" ry="10" fill="#2E1B10"/>
+              <circle cx="78" cy="70" r="2.8" fill="#FFFFFF"/>
+              <circle cx="116" cy="70" r="2.8" fill="#FFFFFF"/>
+              <path d="M90 106q10-8 20 0" fill="none" stroke="#6B3B1E" stroke-width="3.4" stroke-linecap="round"/>
+              <path d="M69 83c0 0-5.5 6.5-5.5 10a5.5 5.5 0 0 0 11 0c0-3.5-5.5-10-5.5-10Z" fill="#7DD3FC"/>
+            </g>
+          </g>
+
+          <g class="buddy-sparkles" fill="#FFD84D">
+            <path d="M27 52l2.4 6.8L36 61l-6.6 2.2L27 70l-2.4-6.8L18 61l6.6-2.2Z"/>
+            <path d="M173 44l1.9 5.4 5.1 1.6-5.1 1.8-1.9 5.2-1.9-5.2-5.1-1.8 5.1-1.6Z"/>
+            <path d="M168 106l1.5 4.2 4 1.3-4 1.4-1.5 4.1-1.5-4.1-4-1.4 4-1.3Z"/>
+          </g>
+        </svg>
+      </button>
+
+      <button class="buddy-hide" id="buddyHide" type="button" aria-label="Sembunyikan Oren">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <button class="buddy-restore" id="buddyRestore" type="button" hidden aria-label="Tampilkan Oren">
+      <span class="buddy-restore-face" aria-hidden="true">
+        <svg viewBox="0 0 40 40">
+          <circle cx="10" cy="10" r="6" fill="#F9A825"/>
+          <circle cx="30" cy="10" r="6" fill="#F9A825"/>
+          <circle cx="20" cy="22" r="15" fill="#FBA41F"/>
+          <circle cx="14.5" cy="20" r="2.4" fill="#2E1B10"/>
+          <circle cx="25.5" cy="20" r="2.4" fill="#2E1B10"/>
+          <path d="M16 27c1.4 2 2.7 3 4 3s2.6-1 4-3" fill="none" stroke="#6B3B1E" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span>Panggil Oren</span>
+    </button>
+  </div>
+
+  <!-- ============ ONBOARDING TRACKER ============ -->
+  <div class="onboarding-layer" id="trackerOnboarding" aria-hidden="true">
+    <div class="onboarding-backdrop" data-onboarding-skip></div>
+    <div class="onboarding-tooltip" id="onboardingTooltip" role="dialog" aria-modal="false" aria-labelledby="onboardingTitle" data-placement="bottom">
+      <span class="onboarding-step" id="onboardingStep">Langkah 1 dari 3</span>
+      <h3 id="onboardingTitle">Pilih hari</h3>
+      <p id="onboardingText">Pilih hari yang ingin kamu isi.</p>
+      <div class="onboarding-actions">
+        <button type="button" class="onboarding-skip" id="onboardingSkip">Lewati</button>
+        <button type="button" class="onboarding-next" id="onboardingNext">Lanjut</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
   <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
 
@@ -719,8 +973,18 @@
 
   <script src="js/config.js" defer></script>
   <script src="js/storage.js" defer></script>
-  <script src="js/ui.js" defer></script>
+  <script src="js/ui.js?v=20261126-5" defer></script>
+  <script src="js/buddy.js?v=20261126-3" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
-  <script src="js/app.js" defer></script>
+  <script src="js/app.js?v=20261126-9" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function (err) {
+          console.warn('SW registration failed:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>

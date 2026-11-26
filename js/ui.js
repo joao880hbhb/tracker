@@ -415,6 +415,48 @@
     };
   }
 
+  let revealObserver = null;
+
+  function getRevealObserver() {
+    if (revealObserver) return revealObserver;
+    if (!("IntersectionObserver" in window)) return null;
+
+    revealObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-revealed");
+          revealObserver.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -8% 0px"
+      }
+    );
+
+    return revealObserver;
+  }
+
+  function initReveal(root) {
+    const scope = root || document;
+    const nodes = scope.querySelectorAll("[data-reveal]:not(.is-revealed)");
+    if (!nodes.length) return;
+
+    const prefersReduced =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const observer = getRevealObserver();
+
+    nodes.forEach(function (node) {
+      if (prefersReduced || !observer) {
+        node.classList.add("is-revealed");
+        return;
+      }
+      observer.observe(node);
+    });
+  }
+
   NS.UI = {
     icon,
     hydrateIcons,
@@ -428,6 +470,7 @@
     formatDate,
     formatDateTime,
     slugify,
-    debounce
+    debounce,
+    initReveal
   };
 })();

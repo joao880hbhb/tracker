@@ -1,0 +1,39 @@
+{
+  "id": "./index.html",
+  "name": "KAIH 30 Hari — Habit Tracker",
+  "short_name": "KAIH Tracker",
+  "description": "Tracker pembiasaan 7 Kebiasaan Anak Indonesia Hebat selama 30 hari.",
+  "lang": "id",
+  "start_url": "./index.html?app=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FBF9FF",
+  "theme_color": "#271F4A",
+  "icons": [
+    {
+      "src": "assets/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -16,11 +16,13 @@
     data: Storage.createDefaultData(),
     activeDay: 1,
     drafts: new Map(),
-    activePosterIndex: 0
+    activePosterIndex: 0,
+    appMode: false
   };
 
   const elements = {};
   let dailyProgressChart = null;
+  let deferredInstallPrompt = null;
 
   /* ------------------------------------------------------------------
      Helpers
@@ -101,6 +103,15 @@
     elements.lightboxStage = document.getElementById("lightboxStage");
     elements.downloadPosterBtn = document.getElementById("downloadPosterBtn");
     elements.printReport = document.getElementById("printReport");
+    elements.trackerOnboarding = document.getElementById("trackerOnboarding");
+    elements.onboardingTooltip = document.getElementById("onboardingTooltip");
+    elements.onboardingStep = document.getElementById("onboardingStep");
+    elements.onboardingTitle = document.getElementById("onboardingTitle");
+    elements.onboardingText = document.getElementById("onboardingText");
+    elements.onboardingNext = document.getElementById("onboardingNext");
+    elements.onboardingSkip = document.getElementById("onboardingSkip");
+    elements.installButtons = Array.from(document.querySelectorAll("[data-install-app]"));
+    elements.installModal = document.getElementById("installModal");
   }
 
   /* ------------------------------------------------------------------
@@ -121,16 +132,19 @@
      ------------------------------------------------------------------ */
   function renderHabits() {
     elements.habitsGrid.innerHTML = CONFIG.habits
-      .map(function (habit) {
+      .map(function (habit, index) {
+        const revealDelay = index * 70;
         return (
-          '<article class="habit-card" data-habit-id="' +
-          habit.id +
-          '" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Buka panduan ' +
-          UI.escapeHTML(habit.name) +
-          '" style="--habit-soft:' +
+          '<article class="habit-card" data-reveal="up" style="--reveal-delay:' +
+          revealDelay +
+          'ms;--habit-soft:' +
           habit.soft +
           ";--habit-ink:" +
           habit.ink +
+          '" data-habit-id="' +
+          habit.id +
+          '" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Buka panduan ' +
+          UI.escapeHTML(habit.name) +
           '">' +
           '<div class="habit-card-top">' +
           '<span class="habit-number">' +
@@ -520,6 +534,14 @@
     updateSaveState(draft, state.data.logs[dayKey(day)]);
     renderRecap();
 
+    if (NS.Buddy) {
+      NS.Buddy.celebrate({
+        data: state.data,
+        completed,
+        day
+      });
+    }
+
     if (completed === HABIT_COUNT) {
       UI.launchConfetti();
       UI.showToast("Ketujuh kebiasaan hari ini sudah kamu lakukan. Pertahankan ritmenya, ya.", {
@@ -663,7 +685,9 @@
     elements.posterGallery.innerHTML = CONFIG.posters
       .map(function (poster, index) {
         return (
-          '<article class="poster-card">' +
+          '<article class="poster-card" data-reveal="up" style="--reveal-delay:' +
+          index * 80 +
+          'ms">' +
           '<button type="button" class="poster-image-button" data-poster-index="' +
           index +
           '" aria-label="Perbesar poster ' +
@@ -1198,6 +1222,7 @@
     renderRecap();
     renderDaySelector();
     renderDayContent();
+    if (NS.Buddy) NS.Buddy.refresh(state.data, { announce: true });
     UI.closeModal(elements.resetModal);
     UI.showToast("Seluruh data aplikasi telah dihapus. Kamu bisa memulai dari hari pertama.", {
       title: "Data dihapus",
@@ -1439,6 +1464,7 @@
       renderDaySelector();
       renderDayContent();
       renderRecap();
+      if (NS.Buddy) NS.Buddy.refresh(state.data);
 
       UI.showToast("Data diperbarui dari tab lain.", {
         title: "Sinkronisasi",
@@ -1459,13 +1485,399 @@
   }
 
   /* ------------------------------------------------------------------
+     Tracker onboarding
+     ------------------------------------------------------------------ */
+  const ONBOARDING_KEY = "kaih_tracker_onboarding_v1";
+  const onboarding = {
+    step: 0,
+    active: false,
+    highlightTarget: null,
+    observer: null
+  };
+
+  function getOnboardingSteps() {
+    return [
+      {
+        target: elements.daySelector ? elements.daySelector.closest(".day-picker") : null,
+        title: "Pilih hari",
+        text: "Pilih hari ke-1 sampai ke-30. Hari yang sudah diisi akan punya tanda hijau.",
+        placement: "bottom"
+      },
+      {
+        target: elements.habitChecklist,
+        title: "Centang kebiasaan",
+        text: "Centang kebiasaan yang kamu lakukan hari ini. Catatan dan mood boleh diisi kalau mau.",
+        placement: "top"
+      },
+      {
+        target: elements.saveProgress
+          ? elements.saveProgress.closest(".save-area") || elements.saveProgress
+          : null,
+        title: "Simpan progres",
+        text: "Tekan Simpan Progres Hari Ini agar catatanmu tersimpan di perangkat ini.",
+        placement: "top"
+      }
+    ];
+  }
+
+  function hasSeenTrackerOnboarding() {
+    try {
+      return window.localStorage.getItem(ONBOARDING_KEY) === "1";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function markTrackerOnboardingSeen() {
+    try {
+      window.localStorage.setItem(ONBOARDING_KEY, "1");
+    } catch (error) {
+      /* Abaikan: onboarding tetap bisa ditutup untuk sesi ini. */
+    }
+  }
+
+  function clearOnboardingHighlight() {
+    if (onboarding.highlightTarget) {
+      onboarding.highlightTarget.classList.remove("onboarding-highlight");
+      onboarding.highlightTarget = null;
+    }
+  }
+
+  function positionOnboardingTooltip(target, placement) {
+    if (!elements.onboardingTooltip || !target) return;
+
+    const tooltip = elements.onboardingTooltip;
+    const margin = 12;
+    const gap = 14;
+    const targetRect = target.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    let top =
+      placement === "top"
+        ? targetRect.top - tooltipRect.height - gap
+        : targetRect.bottom + gap;
+    let left = targetRect.left + targetRect.width / 2 - tooltipRect.width / 2;
+
+    const maxLeft = window.innerWidth - tooltipRect.width - margin;
+    left = Math.max(margin, Math.min(left, maxLeft));
+
+    if (placement === "top" && top < margin) {
+      top = targetRect.bottom + gap;
+      placement = "bottom";
+    }
+    if (placement === "bottom" && top + tooltipRect.height > window.innerHeight - margin) {
+      top = Math.max(margin, targetRect.top - tooltipRect.height - gap);
+      placement = "top";
+    }
+
+    top = Math.max(margin, Math.min(top, window.innerHeight - tooltipRect.height - margin));
+
+    const arrowX = Math.max(
+      20,
+      Math.min(targetRect.left + targetRect.width / 2 - left - 7, tooltipRect.width - 34)
+    );
+
+    tooltip.style.top = Math.round(top) + "px";
+    tooltip.style.left = Math.round(left) + "px";
+    tooltip.style.setProperty("--arrow-x", Math.round(arrowX) + "px");
+    tooltip.setAttribute("data-placement", placement);
+  }
+
+  function getActiveOnboardingSteps() {
+    return getOnboardingSteps().filter(function (step) {
+      return step.target && step.target.isConnected;
+    });
+  }
+
+  function repositionOnboardingTooltip() {
+    if (!onboarding.active || !onboarding.highlightTarget) return;
+    const steps = getActiveOnboardingSteps();
+    const step = steps[onboarding.step];
+    if (!step) return;
+    positionOnboardingTooltip(step.target, step.placement);
+  }
+
+  function renderOnboardingStep(shouldScroll) {
+    if (!onboarding.active) return;
+
+    const steps = getActiveOnboardingSteps();
+    if (!steps.length) {
+      closeTrackerOnboarding(false);
+      return;
+    }
+
+    onboarding.step = Math.max(0, Math.min(onboarding.step, steps.length - 1));
+    const step = steps[onboarding.step];
+
+    clearOnboardingHighlight();
+    onboarding.highlightTarget = step.target;
+    step.target.classList.add("onboarding-highlight");
+
+    elements.onboardingStep.textContent =
+      "Langkah " + (onboarding.step + 1) + " dari " + steps.length;
+    elements.onboardingTitle.textContent = step.title;
+    elements.onboardingText.textContent = step.text;
+    elements.onboardingNext.textContent =
+      onboarding.step === steps.length - 1 ? "Selesai" : "Lanjut";
+
+    if (shouldScroll !== false) {
+      const rect = step.target.getBoundingClientRect();
+      const outOfView = rect.top < 90 || rect.bottom > window.innerHeight - 90;
+      if (outOfView) {
+        step.target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+
+    window.requestAnimationFrame(function () {
+      repositionOnboardingTooltip();
+      window.requestAnimationFrame(function () {
+        repositionOnboardingTooltip();
+      });
+    });
+  }
+
+  function openTrackerOnboarding() {
+    if (onboarding.active || hasSeenTrackerOnboarding()) return;
+    if (!elements.trackerOnboarding || !elements.onboardingTooltip) return;
+
+    onboarding.active = true;
+    onboarding.step = 0;
+    elements.trackerOnboarding.classList.add("is-open");
+    elements.trackerOnboarding.setAttribute("aria-hidden", "false");
+    renderOnboardingStep();
+  }
+
+  function closeTrackerOnboarding(markSeen) {
+    if (!elements.trackerOnboarding) return;
+
+    onboarding.active = false;
+    clearOnboardingHighlight();
+    elements.trackerOnboarding.classList.remove("is-open");
+    elements.trackerOnboarding.setAttribute("aria-hidden", "true");
+
+    if (markSeen !== false) {
+      markTrackerOnboardingSeen();
+    }
+  }
+
+  function initTrackerOnboarding() {
+    if (!elements.trackerOnboarding || hasSeenTrackerOnboarding()) return;
+
+    elements.onboardingNext.addEventListener("click", function () {
+      const steps = getOnboardingSteps().filter(function (step) {
+        return step.target && step.target.isConnected;
+      });
+      if (onboarding.step >= steps.length - 1) {
+        closeTrackerOnboarding(true);
+        return;
+      }
+      onboarding.step += 1;
+      renderOnboardingStep();
+    });
+
+    elements.onboardingSkip.addEventListener("click", function () {
+      closeTrackerOnboarding(true);
+    });
+
+    elements.trackerOnboarding.addEventListener("click", function (event) {
+      if (event.target && event.target.closest("[data-onboarding-skip]")) {
+        closeTrackerOnboarding(true);
+      }
+    });
+
+    function maybeOpenOnboardingFromScroll() {
+      if (onboarding.active || hasSeenTrackerOnboarding()) return;
+      const tracker = document.getElementById("tracker");
+      if (!tracker) return;
+      const rect = tracker.getBoundingClientRect();
+      const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+      if (visible >= Math.min(160, rect.height * 0.2)) {
+        if (onboarding.observer) {
+          onboarding.observer.disconnect();
+          onboarding.observer = null;
+        }
+        openTrackerOnboarding();
+      }
+    }
+
+    window.addEventListener("resize", function () {
+      if (onboarding.active) {
+        repositionOnboardingTooltip();
+        return;
+      }
+      maybeOpenOnboardingFromScroll();
+    });
+
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (onboarding.active) {
+          repositionOnboardingTooltip();
+          return;
+        }
+        maybeOpenOnboardingFromScroll();
+      },
+      { passive: true }
+    );
+
+    const tracker = document.getElementById("tracker");
+    if (!tracker || !("IntersectionObserver" in window)) {
+      openTrackerOnboarding();
+      return;
+    }
+
+    onboarding.observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          if (onboarding.observer) {
+            onboarding.observer.disconnect();
+            onboarding.observer = null;
+          }
+          openTrackerOnboarding();
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    onboarding.observer.observe(tracker);
+
+    const rect = tracker.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0 && rect.height > 0;
+    if (inView) {
+      onboarding.observer.disconnect();
+      onboarding.observer = null;
+      openTrackerOnboarding();
+    }
+  }
+
+  /* ------------------------------------------------------------------
+     App mode & install
+     ------------------------------------------------------------------ */
+  function isStandaloneMode() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true
+    );
+  }
+
+  function detectAppMode() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("app") === "1" || isStandaloneMode();
+  }
+
+  function applyAppMode() {
+    state.appMode = detectAppMode();
+    if (state.appMode) {
+      document.documentElement.classList.add("app-mode");
+    } else {
+      document.documentElement.classList.remove("app-mode");
+    }
+
+    // In app mode, default to tracker when no explicit tracker/recap hash.
+    if (state.appMode) {
+      const hash = (window.location.hash || "").toLowerCase();
+      if (hash !== "#tracker" && hash !== "#recap") {
+        history.replaceState(null, "", window.location.pathname + window.location.search + "#tracker");
+      }
+    }
+
+    document.querySelectorAll('a.brand[href]').forEach(function (link) {
+      link.setAttribute("href", state.appMode ? "#tracker" : "#home");
+    });
+  }
+
+  function updateInstallButtons() {
+    const standalone = isStandaloneMode();
+    elements.installButtons.forEach(function (btn) {
+      btn.hidden = standalone;
+    });
+  }
+
+  async function handleInstallClick() {
+    if (isStandaloneMode()) {
+      UI.showToast("KAIH Tracker sudah tersimpan di perangkat ini.", {
+        title: "Sudah terpasang",
+        type: "success"
+      });
+      return;
+    }
+
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      try {
+        const choice = await deferredInstallPrompt.userChoice;
+        if (choice && choice.outcome === "accepted") {
+          UI.showToast("KAIH Tracker sedang dipasang di perangkatmu.", {
+            title: "Memasang aplikasi",
+            type: "success"
+          });
+        }
+      } catch (error) {
+        /* Abaikan: prompt install bisa dibatalkan atau tidak didukung. */
+      }
+      deferredInstallPrompt = null;
+      updateInstallButtons();
+      return;
+    }
+
+    if (elements.installModal) {
+      UI.openModal(elements.installModal, elements.installButtons[0] || null);
+    }
+  }
+
+  function initInstall() {
+    updateInstallButtons();
+
+    elements.installButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        handleInstallClick();
+      });
+    });
+
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      updateInstallButtons();
+    });
+
+    window.addEventListener("appinstalled", function () {
+      deferredInstallPrompt = null;
+      updateInstallButtons();
+      document.documentElement.classList.add("app-mode");
+      state.appMode = true;
+      UI.showToast("KAIH Tracker sudah tersimpan. Buka dari layar utama untuk mode tracker + riwayat.", {
+        title: "Berhasil dipasang",
+        type: "success",
+        duration: 5200
+      });
+    });
+
+    const displayModeQuery = window.matchMedia("(display-mode: standalone)");
+    const onDisplayModeChange = function () {
+      updateInstallButtons();
+      if (isStandaloneMode()) {
+        document.documentElement.classList.add("app-mode");
+        state.appMode = true;
+      }
+    };
+    if (displayModeQuery.addEventListener) {
+      displayModeQuery.addEventListener("change", onDisplayModeChange);
+    } else if (displayModeQuery.addListener) {
+      displayModeQuery.addListener(onDisplayModeChange);
+    }
+  }
+
+  /* ------------------------------------------------------------------
      Init
      ------------------------------------------------------------------ */
   function init() {
     state.data = Storage.loadData();
     cacheElements();
+    applyAppMode();
     UI.initModalSystem();
     UI.hydrateIcons(document);
+    initInstall();
 
     state.activeDay = findNextIncompleteDay();
 
@@ -1477,6 +1889,7 @@
     renderVideoInfo();
     renderVideoCover();
     renderPosterGallery();
+    UI.initReveal(document);
 
     elements.footerYear.textContent = String(new Date().getFullYear());
     elements.recapDate.textContent = UI.formatDate(new Date());
@@ -1484,9 +1897,20 @@
     attachEventListeners();
     setActiveNav("home");
     updateActiveNavFromScroll();
+    if (state.appMode) {
+      const appHash = (window.location.hash || "").replace("#", "");
+      setActiveNav(appHash === "recap" ? "recap" : "tracker");
+    }
 
     window.requestAnimationFrame(function () {
       scrollActiveDayIntoView("auto");
+      if (state.appMode) {
+        const hash = window.location.hash || "#tracker";
+        const target = document.querySelector(hash);
+        if (target && (hash === "#tracker" || hash === "#recap")) {
+          target.scrollIntoView({ behavior: "auto", block: "start" });
+        }
+      }
     });
 
     const storageError = Storage.consumeError();
@@ -1500,6 +1924,7 @@
       }, 500);
     }
 
+    initTrackerOnboarding();
     document.body.classList.add("is-ready");
   }
 

@@ -500,6 +500,41 @@ p {
   transform: translateY(-1px);
 }
 
+.nav-install-btn {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--navy);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.nav-install-btn .icon {
+  width: 15px;
+  height: 15px;
+  color: var(--sky-deep);
+}
+
+.nav-install-btn:hover {
+  border-color: #cfc0ff;
+  background: var(--soft-purple);
+  transform: translateY(-1px);
+}
+
+.nav-install-btn[hidden] {
+  display: none !important;
+}
+
 .nav-mobile-toggle {
   display: none;
   width: 44px;
@@ -549,6 +584,15 @@ p {
 .mobile-menu-cta {
   width: 100%;
   margin-top: 4px;
+}
+
+.mobile-install-btn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.mobile-install-btn[hidden] {
+  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -2780,6 +2824,439 @@ p {
 }
 
 /* --------------------------------------------------------------------------
+   Teman Pengawal (Habit Buddy)
+   -------------------------------------------------------------------------- */
+.habit-buddy {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 250;
+  display: flex;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 40px));
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.habit-buddy > * {
+  pointer-events: auto;
+}
+
+.buddy-stage {
+  position: relative;
+  display: inline-flex;
+  padding: 4px 10px 2px;
+}
+
+.buddy-figure {
+  display: block;
+  width: 136px;
+  height: 136px;
+  padding: 0;
+  border-radius: 50%;
+  transition: transform 0.25s ease;
+}
+
+.buddy-figure:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+.buddy-figure:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.buddy-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 10px 16px rgba(39, 31, 74, 0.14));
+}
+
+.buddy-character {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: buddy-float 4.4s ease-in-out infinite;
+}
+
+/* Ekspresi: hanya satu wajah yang tampil. */
+.buddy-face,
+.buddy-sparkles {
+  display: none;
+}
+
+.habit-buddy[data-mood="idle"] .buddy-face[data-face="idle"],
+.habit-buddy[data-mood="happy"] .buddy-face[data-face="happy"],
+.habit-buddy[data-mood="cheer"] .buddy-face[data-face="cheer"],
+.habit-buddy[data-mood="sad"] .buddy-face[data-face="sad"] {
+  display: block;
+}
+
+.habit-buddy[data-mood="cheer"] .buddy-sparkles {
+  display: block;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: buddy-twinkle 1.6s ease-in-out infinite;
+}
+
+.habit-buddy[data-mood="cheer"] .buddy-character {
+  animation: buddy-cheer 1.5s ease-in-out infinite;
+}
+
+.habit-buddy[data-mood="sad"] .buddy-character {
+  animation: buddy-sway 4.6s ease-in-out infinite;
+}
+
+.habit-buddy[data-mood="sad"] .buddy-svg {
+  filter: saturate(0.82) drop-shadow(0 10px 16px rgba(39, 31, 74, 0.12));
+}
+
+.buddy-eyes-open {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: buddy-blink 5.4s infinite;
+}
+
+.habit-buddy.is-celebrating .buddy-character {
+  animation: buddy-jump 0.72s cubic-bezier(0.34, 1.56, 0.64, 1) 3;
+}
+
+.habit-buddy.is-poked .buddy-character {
+  animation: buddy-jump 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+}
+
+/* Badge streak */
+.buddy-streak {
+  position: absolute;
+  top: 56%;
+  left: calc(100% - 18px);
+  display: inline-flex;
+  transform: translateY(-50%);
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px 4px 6px;
+  border: 1px solid #fde3b3;
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 6px 14px rgba(39, 31, 74, 0.14);
+  color: #b45309;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.buddy-streak[hidden] {
+  display: none;
+}
+
+.buddy-flame {
+  width: 13px;
+  height: 13px;
+}
+
+/* Tombol sembunyikan */
+.buddy-hide {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 4px 10px rgba(39, 31, 74, 0.12);
+  color: var(--muted-light);
+  opacity: 0.65;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.buddy-hide svg {
+  width: 11px;
+  height: 11px;
+}
+
+.buddy-hide:hover,
+.buddy-hide:focus-visible {
+  color: var(--navy);
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* Balon percakapan */
+.buddy-bubble {
+  position: relative;
+  width: 272px;
+  max-width: 100%;
+  padding: 14px 32px 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--white);
+  box-shadow: 0 16px 34px rgba(39, 31, 74, 0.16);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(0.97);
+  transform-origin: 24px 100%;
+  transition:
+    opacity 0.24s ease,
+    transform 0.24s ease,
+    visibility 0.24s ease;
+}
+
+.buddy-bubble::after {
+  content: "";
+  position: absolute;
+  left: 24px;
+  bottom: -7px;
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0 0 4px 0;
+  background: var(--white);
+  transform: rotate(45deg);
+}
+
+.buddy-bubble.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.buddy-bubble-kicker {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--sky-deep);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.buddy-bubble strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.buddy-bubble p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+.buddy-bubble-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.buddy-bubble-link svg {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.2s ease;
+}
+
+.buddy-bubble-link:hover svg {
+  transform: translateX(2px);
+}
+
+.buddy-bubble-link[hidden] {
+  display: none;
+}
+
+.buddy-bubble-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--muted-light);
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.buddy-bubble-close svg {
+  width: 11px;
+  height: 11px;
+}
+
+.buddy-bubble-close:hover {
+  background: var(--line-soft);
+  color: var(--navy);
+}
+
+/* Tombol panggil saat disembunyikan */
+.buddy-restore {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 10px 22px rgba(39, 31, 74, 0.16);
+  color: var(--navy);
+  font-size: 11px;
+  font-weight: 800;
+  transition: transform 0.2s ease;
+}
+
+.buddy-restore[hidden] {
+  display: none;
+}
+
+.buddy-restore:hover {
+  transform: translateY(-2px);
+}
+
+.buddy-restore-face {
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.buddy-restore-face svg {
+  width: 100%;
+  height: 100%;
+}
+
+.habit-buddy.is-hidden .buddy-stage,
+.habit-buddy.is-hidden .buddy-bubble {
+  display: none;
+}
+
+@keyframes buddy-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes buddy-cheer {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  25% {
+    transform: translateY(-7px) rotate(-2.5deg);
+  }
+  75% {
+    transform: translateY(-3px) rotate(2.5deg);
+  }
+}
+
+@keyframes buddy-sway {
+  0%,
+  100% {
+    transform: translateY(2px) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(4px) rotate(1.5deg);
+  }
+}
+
+@keyframes buddy-jump {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  35% {
+    transform: translateY(-16px) scale(1.04, 0.96);
+  }
+  60% {
+    transform: translateY(0) scale(0.97, 1.03);
+  }
+}
+
+@keyframes buddy-blink {
+  0%,
+  91%,
+  100% {
+    transform: scaleY(1);
+  }
+  94%,
+  96% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes buddy-twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@media (max-width: 640px) {
+  .habit-buddy {
+    left: 12px;
+    bottom: 12px;
+    max-width: min(292px, calc(100vw - 24px));
+  }
+
+  .buddy-stage {
+    padding: 2px 6px 0;
+  }
+
+  .buddy-figure {
+    width: 108px;
+    height: 108px;
+  }
+
+  .buddy-bubble {
+    width: 250px;
+    padding: 12px 30px 12px 14px;
+  }
+
+  .buddy-streak {
+    top: 58%;
+    left: calc(100% - 12px);
+  }
+
+  /* Saat Oren tampil, toast digeser ke kanan agar tidak menutupi karakter. */
+  body.has-buddy .toast-container {
+    left: 142px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  body.has-buddy .toast-container {
+    left: 126px;
+  }
+}
+
+/* --------------------------------------------------------------------------
    Toasts
    -------------------------------------------------------------------------- */
 .toast-container {
@@ -3731,6 +4208,183 @@ p {
 }
 
 /* --------------------------------------------------------------------------
+   Tracker onboarding
+   -------------------------------------------------------------------------- */
+.onboarding-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 280;
+  display: none;
+}
+
+.onboarding-layer.is-open {
+  display: block;
+}
+
+.onboarding-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(39, 31, 74, 0.16);
+}
+
+.onboarding-tooltip {
+  position: fixed;
+  width: min(320px, calc(100vw - 32px));
+  padding: 16px 16px 14px;
+  border: 1px solid rgba(128, 86, 232, 0.22);
+  border-radius: 16px;
+  background: var(--white);
+  box-shadow: 0 20px 44px rgba(39, 31, 74, 0.22);
+  z-index: 2;
+}
+
+.onboarding-tooltip::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--white);
+  border-left: 1px solid rgba(128, 86, 232, 0.22);
+  border-top: 1px solid rgba(128, 86, 232, 0.22);
+  transform: rotate(45deg);
+}
+
+.onboarding-tooltip[data-placement="bottom"]::before {
+  top: -8px;
+  left: var(--arrow-x, 24px);
+}
+
+.onboarding-tooltip[data-placement="top"]::before {
+  bottom: -8px;
+  left: var(--arrow-x, 24px);
+  transform: rotate(225deg);
+}
+
+.onboarding-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--soft-purple);
+  color: var(--sky-deep);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.onboarding-tooltip h3 {
+  margin: 0 0 6px;
+  color: var(--navy);
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.onboarding-tooltip p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.onboarding-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.onboarding-skip {
+  padding: 6px 2px;
+  color: var(--muted-light);
+  font-size: 12px;
+  font-weight: 700;
+  transition: color 0.18s ease;
+}
+
+.onboarding-skip:hover {
+  color: var(--navy);
+}
+
+.onboarding-next {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 800;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.onboarding-next:hover {
+  background: #342a63;
+  transform: translateY(-1px);
+}
+
+.onboarding-highlight {
+  position: relative;
+  border-radius: 12px;
+  box-shadow: 0 0 0 4px rgba(255, 216, 77, 0.95), 0 0 0 8px rgba(255, 216, 77, 0.2) !important;
+  transition: box-shadow 0.2s ease;
+}
+
+@media (max-width: 640px) {
+  .onboarding-tooltip {
+    width: min(320px, calc(100vw - 24px));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal
+   -------------------------------------------------------------------------- */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-y, 24px), 0) scale(var(--reveal-scale, 1));
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js [data-reveal="fade"] {
+  --reveal-y: 0;
+}
+
+.js [data-reveal="scale"] {
+  --reveal-y: 12px;
+  --reveal-scale: 0.97;
+}
+
+.js [data-reveal="left"] {
+  --reveal-y: 0;
+  transform: translate3d(-28px, 0, 0) scale(var(--reveal-scale, 1));
+}
+
+.js [data-reveal="right"] {
+  --reveal-y: 0;
+  transform: translate3d(28px, 0, 0) scale(var(--reveal-scale, 1));
+}
+
+.js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  will-change: auto;
+}
+
+@supports not (animation-timeline: view()) {
+  /* Fallback aman: tetap pakai IntersectionObserver JS. */
+}
+
+/* --------------------------------------------------------------------------
    Reduced motion
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
@@ -3746,6 +4400,13 @@ p {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -3753,6 +4414,108 @@ p {
    -------------------------------------------------------------------------- */
 .print-report {
   display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Install modal
+   -------------------------------------------------------------------------- */
+.install-steps {
+  display: grid;
+  gap: 12px;
+}
+
+.install-step {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 14px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: #fcfbff;
+}
+
+.install-step-num {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--soft-purple);
+  color: var(--sky-deep);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.install-step strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.install-step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------------------
+   App mode (installed / ?app=1) - tracker + recap only
+   -------------------------------------------------------------------------- */
+html.app-mode #home,
+html.app-mode #habits,
+html.app-mode #media,
+html.app-mode .site-footer,
+html.app-mode .nav-links .nav-link[href="#home"],
+html.app-mode .nav-links .nav-link[href="#habits"],
+html.app-mode .nav-links .nav-link[href="#media"],
+html.app-mode .mobile-menu-links .mobile-nav-link[href="#home"],
+html.app-mode .mobile-menu-links .mobile-nav-link[href="#habits"],
+html.app-mode .mobile-menu-links .mobile-nav-link[href="#media"],
+html.app-mode .footer-links a[href="#home"],
+html.app-mode .footer-links a[href="#habits"],
+html.app-mode .footer-links a[href="#media"] {
+  display: none !important;
+}
+
+html.app-mode .tracker-section {
+  padding-top: 40px;
+}
+
+html.app-mode .site-nav {
+  box-shadow: 0 1px 0 var(--line);
+}
+
+html.app-mode .brand-copy small {
+  display: none;
+}
+
+html.app-mode .nav-desktop {
+  gap: 16px;
+}
+
+html.app-mode .nav-links {
+  gap: 20px;
+}
+
+html.app-mode .nav-cta,
+html.app-mode .mobile-menu-cta {
+  display: none !important;
+}
+
+@media (display-mode: standalone) {
+  [data-install-app] {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  html.app-mode .tracker-section {
+    padding-top: 28px;
+  }
 }
 
 @media print {
@@ -3777,6 +4540,7 @@ p {
   .lightbox,
   .toast-container,
   .confetti-layer,
+  .habit-buddy,
   .skip-link {
     display: none !important;
   }
