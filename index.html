@@ -38,7 +38,7 @@
     };
   </script>
 
-  <link rel="stylesheet" href="css/style.css?v=20261126-6">
+  <link rel="stylesheet" href="css/style.css?v=20261127-3">
   <script>
     document.documentElement.classList.add('js');
     (function () {
@@ -83,6 +83,10 @@
               <span class="icon" data-icon="download"></span>
               <span class="nav-install-label">Simpan di HP</span>
             </button>
+            <a href="admin.html" class="nav-admin-btn" aria-label="Buka dashboard admin">
+              <span class="icon" data-icon="shield-check"></span>
+              <span>Admin</span>
+            </a>
             <a href="#tracker" class="nav-cta" data-start-tracking>
               Mulai Mengisi
               <span class="icon" data-icon="arrow-up-right"></span>
@@ -106,6 +110,10 @@
             <span class="icon" data-icon="download"></span>
             Simpan di HP
           </button>
+          <a href="admin.html" class="btn btn-outline mobile-menu-admin">
+            <span class="icon" data-icon="shield-check"></span>
+            Dashboard Admin
+          </a>
           <a href="#tracker" class="btn btn-yellow mobile-menu-cta" data-start-tracking>
             Mulai Mengisi
             <span class="icon" data-icon="arrow-right"></span>
@@ -399,7 +407,41 @@
             </div>
           </div>
 
+          <div class="session-bar" id="sessionBar" hidden>
+            <span class="session-avatar" aria-hidden="true">
+              <span class="icon" data-icon="user-round"></span>
+            </span>
+            <div class="session-copy">
+              <small>Masuk sebagai siswa</small>
+              <strong id="sessionName">Siswa KAIH</strong>
+            </div>
+            <button type="button" class="session-logout" id="logoutBtn">
+              <span class="icon" data-icon="log-out"></span>
+              Keluar
+            </button>
+          </div>
+
           <div class="tracker-shell" data-reveal="up">
+            <div class="tracker-lock" id="trackerLock">
+              <div class="tracker-lock-card">
+                <span class="tracker-lock-icon" aria-hidden="true">
+                  <span class="icon" data-icon="id-card"></span>
+                </span>
+                <h3>Isi identitas dulu, ya</h3>
+                <p>
+                  Sebelum mengisi jurnal 30 hari, masukkan username dan nama siswa. Progres akan
+                  tersimpan ke database dan bisa dipantau guru melalui dashboard admin.
+                </p>
+                <button type="button" class="btn btn-yellow" id="openAuthBtn">
+                  Isi Identitas
+                  <span class="icon" data-icon="arrow-right"></span>
+                </button>
+                <button type="button" class="tracker-lock-link" data-open-auth="login">
+                  Sudah punya akun? Masuk
+                </button>
+              </div>
+            </div>
+
             <div class="tracker-topbar">
               <div class="active-day-block">
                 <span class="active-day-kicker">Hari yang dipilih</span>
@@ -602,7 +644,7 @@
             <div class="report-foot">
               <p>
                 <span class="icon" data-icon="lock"></span>
-                Data hanya tersimpan di browser perangkat ini.
+                Data tersimpan di database KAIH dan disalin ke perangkat ini.
               </p>
               <button type="button" class="text-danger-button" id="resetDataBtn">
                 <span class="icon" data-icon="trash-2"></span>
@@ -643,6 +685,7 @@
           <a href="#media">Media Edukasi</a>
           <a href="#tracker">Habit Tracker</a>
           <a href="#recap">Rekap Progres</a>
+          <a href="admin.html">Dashboard Admin</a>
         </div>
 
         <div class="footer-info">
@@ -688,7 +731,7 @@
         <div>
           <span class="modal-kicker modal-kicker-danger">Tindakan permanen</span>
           <h2 id="resetModalTitle">Hapus semua data?</h2>
-          <p>Identitas peserta, seluruh catatan harian, mood, dan progres kebiasaan akan dihapus dari perangkat ini.</p>
+          <p>Seluruh catatan harian, mood, dan progres kebiasaan akan dihapus dari database maupun perangkat ini. Akun siswa tetap ada.</p>
         </div>
         <button class="icon-button modal-close" type="button" data-modal-close aria-label="Tutup konfirmasi hapus data">
           <span class="icon" data-icon="x"></span>
@@ -952,6 +995,74 @@
     </button>
   </div>
 
+  <!-- ============ IDENTITAS SISWA ============ -->
+  <div class="modal" id="authModal" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-panel modal-panel-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <div class="modal-head">
+        <div>
+          <span class="modal-kicker">Identitas siswa</span>
+          <h2 id="authTitle">Isi identitas dulu</h2>
+          <p id="authIntro">
+            Simpan username dan nama siswa sebelum mulai mengisi jurnal 30 hari. Progres akan masuk
+            ke database sekolah.
+          </p>
+        </div>
+        <button class="icon-button modal-close" type="button" data-modal-close aria-label="Tutup form identitas">
+          <span class="icon" data-icon="x"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="authForm" novalidate>
+          <div class="auth-tabs" role="tablist" aria-label="Pilih daftar baru atau masuk">
+            <button type="button" class="auth-tab is-active" data-auth-tab="register" role="tab" aria-selected="true">
+              Daftar baru
+            </button>
+            <button type="button" class="auth-tab" data-auth-tab="login" role="tab" aria-selected="false">
+              Sudah punya akun
+            </button>
+          </div>
+
+          <div class="auth-field">
+            <label for="authUsername">Username</label>
+            <input id="authUsername" name="username" type="text" autocomplete="username" maxlength="30" placeholder="contoh: budi.sd5" required>
+          </div>
+
+          <div class="auth-field" data-auth-register-only>
+            <label for="authName">Nama siswa</label>
+            <input id="authName" name="name" type="text" autocomplete="name" maxlength="60" placeholder="Nama lengkap siswa" required>
+          </div>
+
+          <div class="auth-row" data-auth-register-only>
+            <div class="auth-field">
+              <label for="authClass">Kelas <span>(opsional)</span></label>
+              <input id="authClass" name="studentClass" type="text" maxlength="30" placeholder="5A">
+            </div>
+            <div class="auth-field">
+              <label for="authSchool">Sekolah <span>(opsional)</span></label>
+              <input id="authSchool" name="school" type="text" maxlength="80" placeholder="SD Negeri 1">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="authPin">PIN</label>
+            <input id="authPin" name="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="4–6 angka" required>
+            <small class="auth-hint">
+              PIN dipakai untuk masuk lagi di perangkat lain. Jangan berikan ke orang lain.
+            </small>
+          </div>
+
+          <p class="auth-error" id="authError" role="alert" hidden></p>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" data-modal-close>Nanti saja</button>
+            <button type="submit" class="btn btn-yellow" id="authSubmitBtn">Simpan &amp; Mulai</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ============ ONBOARDING TRACKER ============ -->
   <div class="onboarding-layer" id="trackerOnboarding" aria-hidden="true">
     <div class="onboarding-backdrop" data-onboarding-skip></div>
@@ -973,10 +1084,11 @@
 
   <script src="js/config.js" defer></script>
   <script src="js/storage.js" defer></script>
-  <script src="js/ui.js?v=20261126-5" defer></script>
+  <script src="js/ui.js?v=20261127-1" defer></script>
+  <script src="js/api.js?v=20261127-4" defer></script>
   <script src="js/buddy.js?v=20261126-3" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
-  <script src="js/app.js?v=20261126-9" defer></script>
+  <script src="js/app.js?v=20261127-4" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {

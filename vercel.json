@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/server/(.*)", "destination": "/api" },
+    { "source": "/package.json", "destination": "/api" },
+    { "source": "/package-lock.json", "destination": "/api" },
+    { "source": "/README.md", "destination": "/api" },
+    { "source": "/.env(.*)", "destination": "/api" },
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
+}

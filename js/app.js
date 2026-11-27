@@ -11,13 +11,18 @@
   const UI = NS.UI;
   const TOTAL_DAYS = CONFIG.totalDays;
   const HABIT_COUNT = CONFIG.habits.length;
+  const API = NS.API;
+  const PENDING_LOGS_KEY = "kaih_pending_logs_v1";
 
   const state = {
     data: Storage.createDefaultData(),
     activeDay: 1,
     drafts: new Map(),
     activePosterIndex: 0,
-    appMode: false
+    appMode: false,
+    session: null,
+    authMode: "register",
+    remoteReady: false
   };
 
   const elements = {};
@@ -112,6 +117,22 @@
     elements.onboardingSkip = document.getElementById("onboardingSkip");
     elements.installButtons = Array.from(document.querySelectorAll("[data-install-app]"));
     elements.installModal = document.getElementById("installModal");
+    elements.trackerShell = document.querySelector(".tracker-shell");
+    elements.trackerLock = document.getElementById("trackerLock");
+    elements.openAuthBtn = document.getElementById("openAuthBtn");
+    elements.sessionBar = document.getElementById("sessionBar");
+    elements.sessionName = document.getElementById("sessionName");
+    elements.logoutBtn = document.getElementById("logoutBtn");
+    elements.authModal = document.getElementById("authModal");
+    elements.authForm = document.getElementById("authForm");
+    elements.authTitle = document.getElementById("authTitle");
+    elements.authIntro = document.getElementById("authIntro");
+    elements.authError = document.getElementById("authError");
+    elements.authSubmitBtn = document.getElementById("authSubmitBtn");
+    elements.authTabs = Array.from(document.querySelectorAll("[data-auth-tab]"));
+    elements.authRegisterOnly = Array.from(
+      document.querySelectorAll("[data-auth-register-only]")
+    );
   }
 
   /* ------------------------------------------------------------------
@@ -125,6 +146,413 @@
     elements.footerSchool.textContent = profile.school
       ? "Bersama " + profile.school + "."
       : "Untuk sekolah dan keluarga Indonesia.";
+  }
+
+  /* ------------------------------------------------------------------
+     Sesi siswa & sinkronisasi server
+     ------------------------------------------------------------------ */
+  function applySessionUI() {
+    const session = state.session;
+    const loggedIn = Boolean(session && session.student);
+    const name = loggedIn ? session.student.name || session.student.username : "";
+
+    if (elements.trackerShell) {
+      elements.trackerShell.classList.toggle("is-locked", !loggedIn);
+      Array.from(elements.trackerShell.children).forEach(function (child) {
+        if (child === elements.trackerLock) return;
+        child.inert = !loggedIn;
+      });
+    }
+    if (elements.sessionBar) {
+      elements.sessionBar.hidden = !loggedIn;
+    }
+    if (elements.sessionName) {
+      elements.sessionName.textContent = name || "Siswa KAIH";
+    }
+    document.body.classList.toggle("is-authenticated", loggedIn);
+  }
+
+  function setAuthMode(mode) {
+    state.authMode = mode === "login" ? "login" : "register";
+
+    elements.authTabs.forEach(function (tab) {
+      const active = tab.getAttribute("data-auth-tab") === state.authMode;
+      tab.classList.toggle("is-active", active);
+      tab.setAttribute("aria-selected", String(active));
+    });
+
+    elements.authRegisterOnly.forEach(function (node) {
+      node.hidden = state.authMode !== "register";
+    });
+
+    if (elements.authTitle) {
+      elements.authTitle.textContent =
+        state.authMode === "register" ? "Isi identitas dulu" : "Masuk ke akunmu";
+    }
+    if (elements.authIntro) {
+      elements.authIntro.textContent =
+        state.authMode === "register"
+          ? "Simpan username dan nama siswa sebelum mulai mengisi jurnal 30 hari. Progres akan masuk ke database sekolah."
+          : "Masukkan username dan PIN yang kamu buat saat mendaftar untuk melanjutkan jurnalmu.";
+    }
+
+    elements.authSubmitBtn.textContent =
+      state.authMode === "register" ? "Simpan & Mulai" : "Masuk";
+    hideAuthError();
+  }
+
+  function hideAuthError() {
+    if (!elements.authError) return;
+    elements.authError.hidden = true;
+    elements.authError.textContent = "";
+  }
+
+  function showAuthError(message) {
+    if (!elements.authError) return;
+    elements.authError.hidden = false;
+    elements.authError.textContent = message;
+  }
+
+  function openAuth(mode) {
+    if (!elements.authModal) return;
+    setAuthMode(mode || "register");
+    UI.openModal(elements.authModal, elements.openAuthBtn || null);
+    window.setTimeout(function () {
+      const input = elements.authForm.querySelector('[name="username"]');
+      if (input) input.focus({ preventScroll: true });
+    }, 80);
+  }
+
+  function readPendingLogs() {
+    try {
+      const raw = window.localStorage.getItem(PENDING_LOGS_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writePendingLogs(map) {
+    try {
+      window.localStorage.setItem(PENDING_LOGS_KEY, JSON.stringify(map));
+    } catch (error) {
+      /* Abaikan: antrean sinkronisasi hanya best-effort. */
+    }
+  }
+
+  function queuePendingLog(day, payload) {
+    const map = readPendingLogs();
+    map["day_" + day] = payload;
+    writePendingLogs(map);
+  }
+
+  function removePendingLog(day) {
+    const map = readPendingLogs();
+    delete map["day_" + day];
+    writePendingLogs(map);
+  }
+
+  async function flushPendingLogs() {
+    const session = state.session;
+    if (!session || !session.token) return;
+
+    const map = readPendingLogs();
+    const keys = Object.keys(map);
+    if (!keys.length) return;
+
+    let synced = 0;
+    for (let index = 0; index < keys.length; index += 1) {
+      const key = keys[index];
+      const day = Number(key.replace("day_", ""));
+      if (!day) {
+        delete map[key];
+        continue;
+      }
+      try {
+        await API.saveLog(session.token, day, map[key]);
+        delete map[key];
+        synced += 1;
+      } catch (error) {
+        if (error.status === 401) break;
+      }
+    }
+    writePendingLogs(map);
+
+    if (synced > 0) {
+      UI.showToast(synced + " catatan tertunda berhasil dikirim ke server.", {
+        title: "Sinkronisasi selesai",
+        type: "success"
+      });
+      await loadRemoteData({ silent: true });
+    }
+  }
+
+  function mergeRemoteData(payload) {
+    if (!payload) return;
+
+    const student = payload.student || {};
+    const preservedDrafts = new Map();
+    state.drafts.forEach(function (draft, day) {
+      if (draft.dirty) preservedDrafts.set(day, draft);
+    });
+
+    state.data.profile = {
+      school: student.school || "",
+      studentName: student.name || "",
+      studentClass: student.studentClass || ""
+    };
+    state.data.logs = payload.logs || {};
+    Storage.saveData(state.data);
+
+    state.drafts.clear();
+    preservedDrafts.forEach(function (draft, day) {
+      state.drafts.set(day, draft);
+    });
+    state.activeDay = findNextIncompleteDay();
+  }
+
+  async function loadRemoteData(options) {
+    const settings = options || {};
+    const session = state.session;
+    if (!session || !session.token) return false;
+
+    try {
+      const payload = await API.me(session.token);
+      mergeRemoteData(payload);
+      session.student = payload.student;
+      API.setSession(session);
+      state.remoteReady = true;
+      applySessionUI();
+      renderProfile();
+      renderDaySelector();
+      renderDayContent();
+      renderRecap();
+      if (NS.Buddy) NS.Buddy.refresh(state.data);
+      return true;
+    } catch (error) {
+      if (error.status === 401) {
+        logoutLocal({ silent: true });
+        UI.showToast("Sesi berakhir. Silakan masuk lagi untuk melanjutkan.", {
+          title: "Perlu masuk ulang",
+          type: "warning"
+        });
+      } else if (!settings.silent) {
+        UI.showToast(
+          error.message || "Data server belum bisa dimuat. Data lokal tetap dipakai.",
+          { title: "Mode offline", type: "warning", duration: 6200 }
+        );
+      }
+      return false;
+    }
+  }
+
+  function logoutLocal(options) {
+    const settings = options || {};
+    API.clearSession();
+    state.session = null;
+    state.remoteReady = false;
+    state.data = Storage.createDefaultData();
+    Storage.resetData();
+    state.drafts.clear();
+    state.activeDay = 1;
+    applySessionUI();
+    renderProfile();
+    renderDaySelector();
+    renderDayContent();
+    renderRecap();
+    if (NS.Buddy) NS.Buddy.refresh(state.data);
+    if (!settings.silent) {
+      UI.showToast("Kamu sudah keluar. Data di server tetap tersimpan.", {
+        title: "Keluar",
+        type: "info"
+      });
+    }
+  }
+
+  async function migrateLocalLogs(localData) {
+    const session = state.session;
+    if (!session || !session.token || !localData || !localData.logs) return;
+
+    const pending = [];
+    Object.keys(localData.logs).forEach(function (key) {
+      if (state.data.logs[key]) return;
+      const log = localData.logs[key];
+      if (!log || !Array.isArray(log.habits)) return;
+      const day = Number(key.replace("day_", ""));
+      if (!Number.isInteger(day) || day < 1 || day > TOTAL_DAYS) return;
+      pending.push({
+        day,
+        payload: {
+          habits: log.habits.slice(0, HABIT_COUNT),
+          note: log.note || "",
+          mood: log.mood || ""
+        }
+      });
+    });
+
+    if (!pending.length) return;
+
+    let moved = 0;
+    for (let index = 0; index < pending.length; index += 1) {
+      try {
+        await API.saveLog(session.token, pending[index].day, pending[index].payload);
+        moved += 1;
+      } catch (error) {
+        /* Lewati hari yang gagal; sisa data lokal tetap aman. */
+      }
+    }
+
+    if (moved > 0) {
+      await loadRemoteData({ silent: true });
+      UI.showToast(
+        moved + " catatan lama di perangkat ini berhasil dipindahkan ke database.",
+        { title: "Data dipindahkan", type: "success", duration: 5200 }
+      );
+    }
+  }
+
+  async function handleAuthSubmit(event) {
+    event.preventDefault();
+    hideAuthError();
+
+    const form = elements.authForm;
+    const mode = state.authMode;
+    const fields = form.elements;
+    const username = fields.username.value.trim().toLowerCase();
+    const pin = fields.pin.value.trim();
+    const name = fields.name.value.trim();
+    const studentClass = fields.studentClass.value.trim();
+    const school = fields.school.value.trim();
+    const localBefore = mode === "register" ? Storage.loadData() : null;
+
+    if (!/^[a-z0-9._-]{3,30}$/.test(username)) {
+      showAuthError(
+        "Username 3–30 karakter. Gunakan huruf kecil, angka, titik, garis bawah, atau strip."
+      );
+      fields.username.focus();
+      return;
+    }
+    if (mode === "register" && (name.length < 2 || name.length > 60)) {
+      showAuthError("Nama siswa harus 2–60 karakter.");
+      fields.name.focus();
+      return;
+    }
+    if (!/^\d{4,6}$/.test(pin)) {
+      showAuthError("PIN harus 4–6 angka.");
+      fields.pin.focus();
+      return;
+    }
+
+    const originalLabel = elements.authSubmitBtn.textContent;
+    elements.authSubmitBtn.disabled = true;
+    elements.authSubmitBtn.textContent = mode === "register" ? "Menyimpan..." : "Memeriksa...";
+
+    try {
+      const payload =
+        mode === "register"
+          ? await API.register({ username, name, studentClass, school, pin })
+          : await API.login({ username, pin });
+
+      const session = { token: payload.token, student: payload.student };
+      API.setSession(session);
+      state.session = session;
+      applySessionUI();
+      UI.closeModal(elements.authModal);
+      form.reset();
+
+      UI.showToast(
+        mode === "register"
+          ? "Identitas tersimpan. Sekarang kamu bisa mengisi jurnal 30 hari."
+          : "Selamat datang kembali, " + (payload.student.name || payload.student.username) + ".",
+        {
+          title: mode === "register" ? "Siap memulai" : "Berhasil masuk",
+          type: "success"
+        }
+      );
+
+      await loadRemoteData({ silent: true });
+      if (localBefore) await migrateLocalLogs(localBefore);
+      await flushPendingLogs();
+
+      const tracker = document.getElementById("tracker");
+      if (tracker) tracker.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (error) {
+      showAuthError(error.message || "Terjadi kesalahan. Coba lagi.");
+    } finally {
+      elements.authSubmitBtn.disabled = false;
+      elements.authSubmitBtn.textContent = originalLabel;
+    }
+  }
+
+  async function syncLogToServer(day, payload) {
+    const session = state.session;
+    if (!session || !session.token) return;
+
+    try {
+      await API.saveLog(session.token, day, payload);
+      removePendingLog(day);
+      if (state.activeDay === day) {
+        elements.saveStatus.classList.remove("is-dirty", "is-idle");
+        elements.saveStatus.classList.add("is-saved");
+        elements.saveStatus.innerHTML =
+          UI.icon("check", 14) + "<span>Tersimpan di server</span>";
+      }
+    } catch (error) {
+      queuePendingLog(day, payload);
+      if (error.status === 401) {
+        logoutLocal({ silent: true });
+        UI.showToast("Sesi berakhir. Silakan masuk lagi untuk menyimpan ke server.", {
+          title: "Perlu masuk ulang",
+          type: "warning",
+          duration: 7000
+        });
+      } else {
+        UI.showToast(
+          "Progres tersimpan di perangkat, tetapi belum terkirim ke server. Akan dicoba lagi otomatis.",
+          { title: "Menunggu sinkronisasi", type: "warning", duration: 6500 }
+        );
+      }
+    }
+  }
+
+  function initAuth() {
+    elements.authTabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        setAuthMode(tab.getAttribute("data-auth-tab"));
+      });
+    });
+
+    elements.authForm.addEventListener("submit", handleAuthSubmit);
+
+    if (elements.openAuthBtn) {
+      elements.openAuthBtn.addEventListener("click", function () {
+        openAuth("register");
+      });
+    }
+
+    if (elements.logoutBtn) {
+      elements.logoutBtn.addEventListener("click", function () {
+        if (window.confirm("Keluar dari akun ini? Data di server tetap tersimpan.")) {
+          logoutLocal();
+        }
+      });
+    }
+
+    document.querySelectorAll("[data-open-auth]").forEach(function (button) {
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        openAuth(button.getAttribute("data-open-auth") || "register");
+      });
+    });
+
+    window.addEventListener("online", function () {
+      if (state.session) {
+        loadRemoteData({ silent: true }).then(function () {
+          flushPendingLogs();
+        });
+      }
+    });
   }
 
   /* ------------------------------------------------------------------
@@ -494,6 +922,11 @@
   }
 
   function handleSaveProgress() {
+    if (!state.session) {
+      openAuth("register");
+      return;
+    }
+
     const day = state.activeDay;
     const draft = getDraft(day);
     const hasContent = draft.habits.some(Boolean) || draft.note.trim().length > 0 || Boolean(draft.mood);
@@ -524,6 +957,12 @@
 
     const persisted = Storage.saveData(state.data);
     const storageError = Storage.consumeError();
+
+    syncLogToServer(day, {
+      habits: draft.habits.slice(0, HABIT_COUNT),
+      note: cleanedNote,
+      mood: draft.mood
+    });
 
     if (elements.dailyNote.value !== cleanedNote) {
       elements.dailyNote.value = cleanedNote;
@@ -1210,11 +1649,34 @@
     }, 120);
   }
 
-  function resetAppData() {
+  async function resetAppData() {
+    const session = state.session;
+
+    if (session && session.token) {
+      try {
+        await API.resetLogs(session.token);
+      } catch (error) {
+        UI.showToast(error.message || "Data di server belum bisa dihapus. Coba lagi.", {
+          title: "Gagal menghapus",
+          type: "error",
+          duration: 6200
+        });
+        return;
+      }
+    }
+
     Storage.resetData();
     const storageError = Storage.consumeError();
+    writePendingLogs({});
 
     state.data = Storage.createDefaultData();
+    if (session && session.student) {
+      state.data.profile = {
+        school: session.student.school || "",
+        studentName: session.student.name || "",
+        studentClass: session.student.studentClass || ""
+      };
+    }
     state.drafts.clear();
     state.activeDay = findNextIncompleteDay();
 
@@ -1224,11 +1686,14 @@
     renderDayContent();
     if (NS.Buddy) NS.Buddy.refresh(state.data, { announce: true });
     UI.closeModal(elements.resetModal);
-    UI.showToast("Seluruh data aplikasi telah dihapus. Kamu bisa memulai dari hari pertama.", {
-      title: "Data dihapus",
-      type: "info",
-      duration: 5200
-    });
+    UI.showToast(
+      "Seluruh catatan harianmu telah dihapus. Identitas tetap tersimpan, jadi kamu bisa memulai dari hari pertama.",
+      {
+        title: "Data dihapus",
+        type: "info",
+        duration: 5200
+      }
+    );
 
     if (storageError) {
       window.setTimeout(function () {
@@ -1282,6 +1747,11 @@
   }
 
   function handleStartTracking() {
+    if (!state.session) {
+      openAuth("register");
+      return;
+    }
+
     const nextDay = findNextIncompleteDay();
     setActiveDay(nextDay, { scrollSelector: true });
     setMobileMenu(false);
@@ -1661,6 +2131,7 @@
   }
 
   function initTrackerOnboarding() {
+    if (!state.session) return;
     if (!elements.trackerOnboarding || hasSeenTrackerOnboarding()) return;
 
     elements.onboardingNext.addEventListener("click", function () {
@@ -1873,11 +2344,13 @@
      ------------------------------------------------------------------ */
   function init() {
     state.data = Storage.loadData();
+    state.session = API.getSession();
     cacheElements();
     applyAppMode();
     UI.initModalSystem();
     UI.hydrateIcons(document);
     initInstall();
+    initAuth();
 
     state.activeDay = findNextIncompleteDay();
 
@@ -1889,6 +2362,7 @@
     renderVideoInfo();
     renderVideoCover();
     renderPosterGallery();
+    applySessionUI();
     UI.initReveal(document);
 
     elements.footerYear.textContent = String(new Date().getFullYear());
@@ -1924,8 +2398,23 @@
       }, 500);
     }
 
+    if (state.session) {
+      loadRemoteData({ silent: true }).then(function () {
+        flushPendingLogs();
+      });
+    }
+
     initTrackerOnboarding();
     document.body.classList.add("is-ready");
+
+    if (window.location.protocol === "file:") {
+      window.setTimeout(function () {
+        UI.showToast(
+          "Buka halaman ini di http://localhost:3000 supaya data bisa tersimpan ke MongoDB. Jangan buka file index.html langsung.",
+          { title: "Perlu dibuka lewat server", type: "warning", duration: 12000 }
+        );
+      }, 900);
+    }
   }
 
   if (document.readyState === "loading") {

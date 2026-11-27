@@ -1,5 +1,5 @@
 /* KAIH 30 Hari - simple service worker for PWA installability and basic offline support. */
-const CACHE_NAME = "kaih-tracker-v2";
+const CACHE_NAME = "kaih-tracker-v4";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -7,6 +7,7 @@ const CORE_ASSETS = [
   "./js/config.js",
   "./js/storage.js",
   "./js/ui.js",
+  "./js/api.js",
   "./js/buddy.js",
   "./js/app.js",
   "./manifest.webmanifest",
@@ -35,6 +36,9 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   const isSameOrigin = url.origin === self.location.origin;
+
+  // API selalu langsung ke jaringan. Jangan pernah di-cache.
+  if (url.pathname.indexOf("/api/") === 0) return;
 
   // Navigation: network-first, fallback to cached app shell
   if (request.mode === "navigate") {

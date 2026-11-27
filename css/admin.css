@@ -1,0 +1,143 @@
+/* --------------------------------------------------------------------------
+   KAIH 30 Hari — dashboard admin
+   -------------------------------------------------------------------------- */
+
+html,
+body {
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon svg,
+.lucide-icon {
+  display: block;
+}
+
+/* Peta 30 hari */
+.heatmap {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.heat-cell {
+  display: flex;
+  aspect-ratio: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: default;
+}
+
+.heat-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+
+/* Toast (dipakai oleh UI.showToast) */
+.toast-container {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, calc(100vw - 36px));
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 14px;
+  border: 1px solid #e9e3f3;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(39, 31, 74, 0.14);
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.is-leaving {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.toast-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.toast-success .toast-icon {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.toast-warning .toast-icon {
+  background: #fef3c7;
+  color: #a16207;
+}
+
+.toast-error .toast-icon {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.toast-info .toast-icon {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.toast-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.toast-copy strong {
+  display: block;
+  margin-bottom: 2px;
+  color: #271f4a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.toast-copy p {
+  margin: 0;
+  color: #5f5a70;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.toast-close {
+  flex: none;
+  padding: 2px;
+  color: #94a3b8;
+}
+
+.toast-close:hover {
+  color: #271f4a;
+}

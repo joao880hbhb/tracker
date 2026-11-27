@@ -91,7 +91,23 @@
     "id-card":
       '<rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8" cy="10" r="2"/><path d="M5 16a3 3 0 0 1 6 0"/><path d="M14 9h5"/><path d="M14 13h5"/>',
     quote:
-      '<path d="M3 21c3 0 7-1 7-8V5H3v7h5c0 3-2 4-5 4v5Z"/><path d="M14 21c3 0 7-1 7-8V5h-7v7h5c0 3-2 4-5 4v5Z"/>'
+      '<path d="M3 21c3 0 7-1 7-8V5H3v7h5c0 3-2 4-5 4v5Z"/><path d="M14 21c3 0 7-1 7-8V5h-7v7h5c0 3-2 4-5 4v5Z"/>',
+    "log-out":
+      '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+    search:
+      '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+    eye:
+      '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+    power:
+      '<path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/>',
+    "refresh-cw":
+      '<path d="M21 12a9 9 0 0 0-15.5-6.2L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.5 6.2L21 16"/><path d="M21 21v-5h-5"/>',
+    "layout-dashboard":
+      '<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+    "shield-check":
+      '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
+    "chevron-up":
+      '<path d="m18 15-6-6-6 6"/>'
   };
 
   function icon(name, size, className) {
